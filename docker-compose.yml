@@ -1,0 +1,181 @@
+services:
+  # Lightdash internal metadata database — required on all profiles (separate from the data warehouse)
+  lightdash-db:
+    image: postgres:latest
+    platform: linux/arm64
+    profiles: ["simple", "postgres", "lakehouse", "full"]
+    environment:
+      POSTGRES_DB: lightdash_db
+      POSTGRES_USER: lightdash
+      POSTGRES_PASSWORD: ${LIGHTDASH_DB_PASSWORD:-changeme}
+    restart: unless-stopped
+
+  # Lightdash — BI dashboard (all profiles)
+  # NOTE: lightdash/lightdash:latest has no ARM64 manifest; runs under Rosetta 2 on Apple Silicon (NFR11 known exception)
+  lightdash:
+    image: lightdash/lightdash:latest
+    platform: linux/amd64
+    profiles: ["simple", "postgres", "lakehouse", "full"]
+    ports:
+      - "18000:3000"
+    environment:
+      - LIGHTDASH_SECRET=${LIGHTDASH_SECRET}
+      - PGHOST=lightdash-db
+      - PGPORT=5432
+      - PGUSER=lightdash
+      - PGPASSWORD=${LIGHTDASH_DB_PASSWORD:-changeme}
+      - PGDATABASE=lightdash_db
+    depends_on:
+      - lightdash-db
+    restart: unless-stopped
+
+  # Evidence — analytical reporting (all profiles)
+  # Story 2.11 completes Evidence project config and volume mounts
+  evidence:
+    image: ghcr.io/evidence-dev/evidence:latest
+    platform: linux/arm64
+    profiles: ["simple", "postgres", "lakehouse", "full"]
+    ports:
+      - "18010:3000"
+    restart: unless-stopped
+
+  # dbt docs — generated documentation server (all profiles)
+  # Served via 'dbt docs serve --port 18020' or 'make open-docs'
+  # Story 2.13 completes dbt documentation and serving setup
+  dbt-docs:
+    image: python:3.11-slim
+    platform: linux/arm64
+    profiles: ["simple", "postgres", "lakehouse", "full"]
+    ports:
+      - "18020:8080"
+    command: tail -f /dev/null
+    restart: unless-stopped
+
+  # Elementary — data observability dashboard (all profiles)
+  # Story 2.9 completes Elementary install and edr report config
+  elementary:
+    image: python:3.11-slim
+    platform: linux/arm64
+    profiles: ["simple", "postgres", "lakehouse", "full"]
+    ports:
+      - "18030:8080"
+    command: tail -f /dev/null
+    restart: unless-stopped
+
+  # Postgres — data warehouse (postgres, full profiles)
+  # Story 3.1 adds init SQL scripts; used as dbt target from Epic 2 onwards
+  postgres:
+    image: postgres:latest
+    platform: linux/arm64
+    profiles: ["postgres", "full"]
+    ports:
+      - "${POSTGRES_PORT:-18040}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    restart: unless-stopped
+
+  # MinIO — object storage (lakehouse, full profiles)
+  # Story 4.1 completes MinIO bucket config with Iceberg integration
+  minio:
+    image: minio/minio:latest
+    platform: linux/arm64
+    profiles: ["lakehouse", "full"]
+    ports:
+      - "18050:9001"
+      - "18060:9000"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  # Trino — distributed query engine (lakehouse, full profiles)
+  # Story 4.1 completes Trino config with Iceberg catalog
+  trino:
+    image: trinodb/trino:latest
+    platform: linux/arm64
+    profiles: ["lakehouse", "full"]
+    ports:
+      - "18070:8080"
+    restart: unless-stopped
+
+  # Airflow — workflow orchestration (full profile)
+  # Story 5.1 completes Airflow with scheduler, worker, and pipeline DAG
+  airflow:
+    image: apache/airflow:latest
+    platform: linux/arm64
+    profiles: ["full"]
+    ports:
+      - "18080:8080"
+    restart: unless-stopped
+
+  # OpenMetadata — data catalog and lineage (full profile)
+  # NOTE: openmetadata/server:latest has no ARM64 manifest; runs under Rosetta 2 on Apple Silicon (NFR11 known exception)
+  # Story 4.3 completes OpenMetadata config; requires Elasticsearch + MySQL dependencies
+  openmetadata:
+    image: openmetadata/server:latest
+    platform: linux/amd64
+    profiles: ["full"]
+    ports:
+      - "18090:8585"
+    restart: unless-stopped
+
+  # Prometheus — metrics collection (full profile)
+  # Story 5.2 adds prometheus.yml config and scrape targets
+  prometheus:
+    image: prom/prometheus:latest
+    platform: linux/arm64
+    profiles: ["full"]
+    ports:
+      - "18100:9090"
+    restart: unless-stopped
+
+  # Grafana — observability dashboards (full profile)
+  # Story 5.2 adds Grafana datasource and dashboard provisioning
+  grafana:
+    image: grafana/grafana:latest
+    platform: linux/arm64
+    profiles: ["full"]
+    ports:
+      - "18110:3000"
+    restart: unless-stopped
+
+  # Keycloak — SSO and service authentication (full profile)
+  # Story 5.3 completes Keycloak realm config and service integration
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    platform: linux/arm64
+    profiles: ["full"]
+    ports:
+      - "18120:8080"
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-changeme}
+    command: start-dev
+    restart: unless-stopped
+
+  # Superset — BI and data exploration (full profile)
+  # NOTE: apache/superset:latest has no reliable ARM64 manifest; runs under Rosetta 2 on Apple Silicon (NFR11 known exception)
+  # Story 5.4 adds Redis + Celery config for full Superset functionality
+  superset:
+    image: apache/superset:latest
+    platform: linux/amd64
+    profiles: ["full"]
+    ports:
+      - "18130:8088"
+    environment:
+      SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY:-changeme-generate-a-random-string}
+    restart: unless-stopped
+
+  # MCP Server — AI agent interface via MetricFlow (full profile)
+  # Story 5.5 builds and configures the MCP Server implementation
+  mcp-server:
+    image: python:3.11-slim
+    platform: linux/arm64
+    profiles: ["full"]
+    ports:
+      - "18140:8000"
+    command: sh -c 'echo "MCP Server stub — Story 5.5 implements this service" && exit 0'
+    restart: "no"

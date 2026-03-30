@@ -1,0 +1,32 @@
+name: local_data_platform
+version: '1.0.0'
+profile: local_data_platform
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  local_data_platform:
+    # No bronze block — Bronze is a source owned by dlt, not a dbt materialization target
+    silver:
+      +schema: silver
+      +materialized: incremental
+      +tags: ['silver']
+    gold:
+      +schema: gold
+      +materialized: table
+      +tags: ['gold']
+    quarantine:
+      +schema: quarantine
+      +materialized: incremental
+      +tags: ['quarantine']
+    metrics:
+      +schema: metrics
+      +materialized: table
+      +tags: ['metrics']

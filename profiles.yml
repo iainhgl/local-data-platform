@@ -1,0 +1,34 @@
+local_data_platform:
+  # COMPOSE_PROFILES controls both Docker Compose profile activation and the dbt target adapter
+  # Options: simple | postgres | lakehouse | full
+  target: "{{ env_var('COMPOSE_PROFILES', 'simple') }}"
+  outputs:
+    simple:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'dev.duckdb') }}"
+      threads: 4
+    postgres:
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('POSTGRES_PORT', '18040') | int }}"
+      user: "{{ env_var('POSTGRES_USER', 'dbt') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD', '') }}"
+      dbname: "{{ env_var('POSTGRES_DB', 'local_data_platform') }}"
+      schema: silver
+      threads: 4
+    lakehouse:
+      type: trino
+      host: "{{ env_var('TRINO_HOST', 'localhost') }}"
+      port: "{{ env_var('TRINO_PORT', '18070') | int }}"
+      user: "{{ env_var('TRINO_USER', 'trino') }}"
+      database: iceberg
+      schema: silver
+      threads: 4
+    full:
+      type: trino
+      host: "{{ env_var('TRINO_HOST', 'localhost') }}"
+      port: "{{ env_var('TRINO_PORT', '18070') | int }}"
+      user: "{{ env_var('TRINO_USER', 'trino') }}"
+      database: iceberg
+      schema: silver
+      threads: 4

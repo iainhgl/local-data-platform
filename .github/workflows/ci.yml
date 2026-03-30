@@ -1,0 +1,40 @@
+# CI is for maintainer use; learners do not need to interact with it.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install dbt-core dbt-duckdb sqlfluff sqlfluff-templater-dbt yamllint
+
+      - name: Install dbt packages
+        run: dbt deps
+
+      - name: dbt compile
+        run: dbt compile --profiles-dir . --target simple
+        env:
+          DBT_DUCKDB_PATH: ":memory:"
+          COMPOSE_PROFILES: simple
+
+      - name: sqlfluff lint
+        run: sqlfluff lint models/ --dialect duckdb --templater dbt
+
+      - name: yamllint
+        run: yamllint .

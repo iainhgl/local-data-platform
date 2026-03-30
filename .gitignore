@@ -1,0 +1,21 @@
+# Environment — NEVER commit .env files
+.env
+.env.*
+!.env.example
+
+# dbt build artifacts
+target/
+dbt_packages/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
