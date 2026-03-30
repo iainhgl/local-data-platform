@@ -1,4 +1,6 @@
 extends: default
+ignore: |
+  dbt_packages/
 rules:
   document-start: disable
   line-length: disable
