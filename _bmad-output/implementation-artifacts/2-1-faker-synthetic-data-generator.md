@@ -1,6 +1,6 @@
 # Story 2.1: Faker Synthetic Data Generator
 
-Status: review
+Status: done
 
 ## Story
 
