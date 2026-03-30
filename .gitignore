@@ -16,6 +16,9 @@ __pycache__/
 venv/
 *.egg-info/
 
+# Generated data files — recreated by faker_generator.py each run
+data/*.json
+
 # OS
 .DS_Store
 Thumbs.db

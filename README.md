@@ -19,8 +19,8 @@ A self-contained, profile-switchable local data platform for learning modern dat
 | 1.1 | Repository scaffold and dbt project initialisation | ✅ done |
 | 1.2 | Makefile profile switching and service lifecycle | ✅ done |
 | 1.3 | Port allocation and Docker Compose structure | ✅ done |
-| **Epic 2** | **Simple Profile — First Working Pipeline (MVP)** | **backlog** |
-| 2.1 | Faker synthetic data generator | backlog |
+| **Epic 2** | **Simple Profile — First Working Pipeline (MVP)** | **in-progress** |
+| 2.1 | Faker synthetic data generator | ✅ done |
 | 2.2 | dlt file source ingestion to bronze | backlog |
 | 2.3 | dlt API source ingestion to bronze | backlog |
 | 2.4 | Silver layer dbt models with medallion structure | backlog |
