@@ -1,6 +1,6 @@
 # Story 2.4: Silver Layer dbt Models with Medallion Structure
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -22,52 +22,60 @@ So that a clean, consistent representation of each entity is available for Gold 
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `models/silver/faker/faker_customers.sql` (AC: 1, 2, 3, 4)
-  - [ ] Use `{{ config(unique_key='_dlt_id', incremental_strategy='delete+insert') }}` block (inherited materialization from `dbt_project.yml`, only unique_key and strategy needed)
-  - [ ] CTE `source_data` selects from `{{ source('faker_file', 'customers') }}`
-  - [ ] CTE `deduplicated` partitions by `_dlt_id` to deduplicate, selects latest record using `_dlt_load_id DESC`
-  - [ ] Final SELECT projects all columns, adding `CURRENT_TIMESTAMP AS _loaded_at` and `'faker_customers_file' AS _source`
-  - [ ] All original Bronze columns included: `customer_id`, `first_name`, `last_name`, `email`, `phone`, `address`, `city`, `country`, `created_at`, `_dlt_load_id`, `_dlt_id`
-  - [ ] Incremental filter: `{% if is_incremental() %} WHERE _dlt_load_id > (SELECT MAX(_dlt_load_id) FROM {{ this }}) {% endif %}`
-  - [ ] VERIFY: `dbt run --select silver.faker_customers` succeeds
+- [x] Task 1: Create `models/silver/faker/faker_customers.sql` (AC: 1, 2, 3, 4)
+  - [x] Use `{{ config(unique_key='_dlt_id', incremental_strategy='delete+insert') }}` block (inherited materialization from `dbt_project.yml`, only unique_key and strategy needed)
+  - [x] CTE `source_data` selects from `{{ source('faker_file', 'customers') }}`
+  - [x] CTE `deduplicated` partitions by `_dlt_id` to deduplicate, selects latest record using `_dlt_load_id DESC`
+  - [x] Final SELECT projects all columns, adding `CURRENT_TIMESTAMP AS _loaded_at` and `'faker_customers_file' AS _source`
+  - [x] All original Bronze columns included: `customer_id`, `first_name`, `last_name`, `email`, `phone`, `address`, `city`, `country`, `created_at`, `_dlt_load_id`, `_dlt_id`
+  - [x] Incremental filter: `{% if is_incremental() %} WHERE _dlt_load_id > (SELECT MAX(_dlt_load_id) FROM {{ this }}) {% endif %}`
+  - [x] VERIFY: `dbt run --select silver.faker_customers` succeeds
 
-- [ ] Task 2: Create `models/silver/faker/faker_products.sql` (AC: 1, 2, 3, 4)
-  - [ ] Same CTE + incremental pattern as `faker_customers`
-  - [ ] Source: `{{ source('faker_file', 'products') }}`
-  - [ ] `_source` literal: `'faker_products_file'`
-  - [ ] All Bronze columns: `product_id`, `product_name`, `category`, `unit_price`, `sku`, `created_at`, `_dlt_load_id`, `_dlt_id`
-  - [ ] VERIFY: `dbt run --select silver.faker_products` succeeds
+- [x] Task 2: Create `models/silver/faker/faker_products.sql` (AC: 1, 2, 3, 4)
+  - [x] Same CTE + incremental pattern as `faker_customers`
+  - [x] Source: `{{ source('faker_file', 'products') }}`
+  - [x] `_source` literal: `'faker_products_file'`
+  - [x] All Bronze columns: `product_id`, `product_name`, `category`, `unit_price`, `sku`, `created_at`, `_dlt_load_id`, `_dlt_id`
+  - [x] VERIFY: `dbt run --select silver.faker_products` succeeds
 
-- [ ] Task 3: Create `models/silver/faker/faker_orders.sql` (AC: 1, 2, 3, 4)
-  - [ ] Same CTE + incremental pattern as `faker_customers`
-  - [ ] Source: `{{ source('faker_file', 'orders') }}`
-  - [ ] `_source` literal: `'faker_orders_file'`
-  - [ ] All Bronze columns: `order_id`, `customer_id`, `product_id`, `order_date`, `quantity`, `unit_price`, `total_amount`, `status`, `created_at`, `_dlt_load_id`, `_dlt_id`
-  - [ ] VERIFY: `dbt run --select silver.faker_orders` succeeds
+- [x] Task 3: Create `models/silver/faker/faker_orders.sql` (AC: 1, 2, 3, 4)
+  - [x] Same CTE + incremental pattern as `faker_customers`
+  - [x] Source: `{{ source('faker_file', 'orders') }}`
+  - [x] `_source` literal: `'faker_orders_file'`
+  - [x] All Bronze columns: `order_id`, `customer_id`, `product_id`, `order_date`, `quantity`, `unit_price`, `total_amount`, `status`, `created_at`, `_dlt_load_id`, `_dlt_id`
+  - [x] VERIFY: `dbt run --select silver.faker_orders` succeeds
 
-- [ ] Task 4: Create `models/silver/faker/faker_returns.sql` (AC: 1, 2, 3, 4)
-  - [ ] Same CTE + incremental pattern as `faker_customers`
-  - [ ] Source: `{{ source('faker_file', 'returns') }}`
-  - [ ] `_source` literal: `'faker_returns_file'`
-  - [ ] All Bronze columns: `return_id`, `order_id`, `product_id`, `return_date`, `reason`, `refund_amount`, `created_at`, `_dlt_load_id`, `_dlt_id`
-  - [ ] VERIFY: `dbt run --select silver.faker_returns` succeeds
+- [x] Task 4: Create `models/silver/faker/faker_returns.sql` (AC: 1, 2, 3, 4)
+  - [x] Same CTE + incremental pattern as `faker_customers`
+  - [x] Source: `{{ source('faker_file', 'returns') }}`
+  - [x] `_source` literal: `'faker_returns_file'`
+  - [x] All Bronze columns: `return_id`, `order_id`, `product_id`, `return_date`, `reason`, `refund_amount`, `created_at`, `_dlt_load_id`, `_dlt_id`
+  - [x] VERIFY: `dbt run --select silver.faker_returns` succeeds
 
-- [ ] Task 5: Create `models/silver/faker/schema.yml` (AC: 5)
-  - [ ] Declare all four models with `description`
-  - [ ] Each model: at least one test (e.g. `unique` + `not_null` on the business primary key)
-  - [ ] Every column documented with `description`, `data_type`, `meta: {pii: true/false}`
-  - [ ] Columns `_loaded_at` and `_source` documented for each model
-  - [ ] VERIFY: `dbt compile` succeeds; `yamllint models/silver/faker/schema.yml` passes
+- [x] Task 5: Create `models/silver/faker/schema.yml` (AC: 5)
+  - [x] Declare all four models with `description`
+  - [x] Each model: at least one test (e.g. `unique` + `not_null` on the business primary key)
+  - [x] Every column documented with `description`, `data_type`, `meta: {pii: true/false}`
+  - [x] Columns `_loaded_at` and `_source` documented for each model
+  - [x] VERIFY: `dbt compile` succeeds; `yamllint models/silver/faker/schema.yml` passes
 
-- [ ] Task 6: Remove `.gitkeep` from `models/silver/` (AC: 1)
-  - [ ] Delete `models/silver/.gitkeep` — it was a placeholder; replace with real files
+- [x] Task 6: Remove `.gitkeep` from `models/silver/` (AC: 1)
+  - [x] Delete `models/silver/.gitkeep` — it was a placeholder; replace with real files
 
-- [ ] Task 7: Full run and idempotency verification (AC: 1, 2, 3)
-  - [ ] Ensure Bronze is populated: `python ingest/dlt_file_source.py`
-  - [ ] Run: `dbt run --select tag:silver` — all four models succeed
-  - [ ] Inspect schema: confirm `_loaded_at` and `_source` present on each Silver table
-  - [ ] Run again: `dbt run --select tag:silver` — row counts unchanged (idempotency)
-  - [ ] Run: `dbt test --select tag:silver` — all tests pass
+- [x] Task 7: Full run and idempotency verification (AC: 1, 2, 3)
+  - [x] Ensure Bronze is populated: `python ingest/dlt_file_source.py`
+  - [x] Run: `dbt run --select tag:silver` — all four models succeed
+  - [x] Inspect schema: confirm `_loaded_at` and `_source` present on each Silver table
+  - [x] Run again: `dbt run --select tag:silver` — row counts unchanged (idempotency)
+  - [x] Run: `dbt test --select tag:silver` — all tests pass
+
+### Review Findings
+
+- [x] [Review][Defer] `_dlt_load_id` varchar comparison in incremental filter and deduplication window [`models/silver/faker/*.sql`] — deferred; `_dlt_load_id` is a varchar holding decimal Unix timestamp strings (e.g. `"1712345678.123456"`); lexicographic comparison is numerically correct for current dlt format but is not guaranteed. `ORDER BY _dlt_load_id DESC` in the dedup window has the same assumption. Address holistically across all Silver models when data quality patterns are established in Story 2.8.
+- [x] [Review][Defer] `delete+insert` strategy does not propagate Bronze hard-deletes to Silver [`models/silver/faker/*.sql`] — deferred; known limitation of the `delete+insert` incremental strategy — rows deleted from Bronze are not removed from Silver. Intentional: Bronze is append-only by dlt design. Document as known behaviour.
+- [x] [Review][Defer] Missing data quality tests: `total_amount` vs `quantity * unit_price`, FK relationship tests on `faker_returns`, `not_null` on FK columns, `unit_price` non-negative constraint [`models/silver/faker/schema.yml`] — deferred; all data quality and relationship tests belong in Story 2.8 (dbt tests, dbt-expectations).
+- [x] [Review][Defer] `CURRENT_TIMESTAMP` returns different types across DuckDB / Postgres / Trino — `TIMESTAMP WITH TIME ZONE` vs `TIMESTAMP(3) WITH TIME ZONE`; `schema.yml` declares `data_type: timestamp` [`models/silver/faker/*.sql`] — deferred; no impact on current simple (DuckDB) profile. Revisit when Postgres and Trino profiles are implemented in Stories 3–4.
+- [x] [Review][Defer] `meta.pii: true` flags in `schema.yml` are advisory only — no masking applied at the Silver model level [`models/silver/faker/schema.yml`] — deferred; PII masking is out of scope for Story 2.4. Addressed in Story 3.2 (three-role RBAC and PII column masking).
 
 ## Dev Notes
 
@@ -287,3 +295,53 @@ models/silver/.gitkeep                    ← delete (replaced by real files)
 ```
 
 No other files should be modified.
+
+## Dev Agent Record
+
+### Agent Model Used
+
+Codex GPT-5
+
+### Implementation Plan
+
+- Mark Story 2.4 as in progress in sprint tracking, then implement the four Silver models in the exact task order from the story.
+- Add the Silver `schema.yml` with model/column metadata and schema tests aligned to the Bronze source definitions.
+- Remove the Silver placeholder, run dbt compile/run/test plus idempotency checks, and only then update task checkboxes, file list, change log, and status.
+
+### Debug Log References
+
+- `python3 ingest/dlt_file_source.py`
+- `dbt compile --profiles-dir . --select tag:silver`
+- `dbt ls --profiles-dir . --resource-type model --select faker_customers`
+- `dbt run --profiles-dir . --select faker_customers`
+- `dbt run --profiles-dir . --select faker_products`
+- `dbt run --profiles-dir . --select faker_orders`
+- `dbt run --profiles-dir . --select faker_returns`
+- `dbt run --profiles-dir . --select tag:silver`
+- `python3 -m yamllint models/silver/faker/schema.yml`
+- `python3 -c "import duckdb; ..."` (schema and row-count verification against `main_silver.*`)
+- `dbt test --profiles-dir . --select tag:silver`
+
+### Completion Notes List
+
+- Implemented four Silver incremental dbt models under `models/silver/faker/`, each using the required CTE-only pattern, `delete+insert` incremental strategy, `_dlt_id` unique key, deduplication by latest `_dlt_load_id`, and `_loaded_at` / `_source` metadata columns.
+- Added `models/silver/faker/schema.yml` documenting every model and column with `description`, `data_type`, and `meta.pii`, plus `unique` and `not_null` schema tests on each business primary key and `_dlt_id`.
+- Removed `models/silver/.gitkeep` and replaced the placeholder directory with real Silver models.
+- Validated compile, per-model runs, full `tag:silver` runs, YAML lint, and dbt tests successfully.
+- Verified idempotency after two consecutive `dbt run --select tag:silver` executions with stable row counts: customers=1000, products=1000, orders=1000, returns=609.
+- Verified Silver metadata columns exist on every table and resolve to the dbt-created `main_silver` schema in DuckDB (`_dlt_load_id`, `_dlt_id`, `_loaded_at`, `_source`).
+- Noted two environment-specific details during validation: dbt model selectors in this project resolve by model name/FQN rather than `silver.<model>`, and DuckDB single-writer locking requires sequential local `dbt run` commands when targeting the same file.
+
+### File List
+
+- `models/silver/faker/faker_customers.sql` (created)
+- `models/silver/faker/faker_products.sql` (created)
+- `models/silver/faker/faker_orders.sql` (created)
+- `models/silver/faker/faker_returns.sql` (created)
+- `models/silver/faker/schema.yml` (created)
+- `models/silver/.gitkeep` (deleted)
+
+## Change Log
+
+- 2026-03-31: Story 2.4 started — Silver layer dbt model implementation in progress.
+- 2026-03-31: Implemented Faker Silver dbt models, added Silver schema documentation/tests, removed the Silver placeholder, and validated compile, runs, idempotency, and dbt tests. Status → review.

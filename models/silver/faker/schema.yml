@@ -1,0 +1,230 @@
+version: 2
+
+models:
+  - name: faker_customers
+    description: "Cleaned and deduplicated customer records from the Faker Bronze file source."
+    columns:
+      - name: customer_id
+        description: "UUID primary key for the customer."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "Customer first name."
+        data_type: varchar
+        meta: {pii: true}
+      - name: last_name
+        description: "Customer last name."
+        data_type: varchar
+        meta: {pii: true}
+      - name: email
+        description: "Customer email address."
+        data_type: varchar
+        meta: {pii: true}
+      - name: phone
+        description: "Customer phone number."
+        data_type: varchar
+        meta: {pii: true}
+      - name: address
+        description: "Customer street address."
+        data_type: varchar
+        meta: {pii: true}
+      - name: city
+        description: "City portion of the customer address."
+        data_type: varchar
+        meta: {pii: false}
+      - name: country
+        description: "Two-letter country code."
+        data_type: varchar
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the source customer record was created."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from Bronze."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "Stable dlt row hash used as the incremental unique key."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: _loaded_at
+        description: "Timestamp when the Silver transformation ran."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _source
+        description: "Literal source identifier for the Faker customers file."
+        data_type: varchar
+        meta: {pii: false}
+
+  - name: faker_products
+    description: "Cleaned and deduplicated product records from the Faker Bronze file source."
+    columns:
+      - name: product_id
+        description: "UUID primary key for the product."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Product display name."
+        data_type: varchar
+        meta: {pii: false}
+      - name: category
+        description: "Product category label."
+        data_type: varchar
+        meta: {pii: false}
+      - name: unit_price
+        description: "Unit price in USD."
+        data_type: double
+        meta: {pii: false}
+      - name: sku
+        description: "Stock keeping unit code."
+        data_type: varchar
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the source product record was created."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from Bronze."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "Stable dlt row hash used as the incremental unique key."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: _loaded_at
+        description: "Timestamp when the Silver transformation ran."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _source
+        description: "Literal source identifier for the Faker products file."
+        data_type: varchar
+        meta: {pii: false}
+
+  - name: faker_orders
+    description: "Cleaned and deduplicated order records from the Faker Bronze file source."
+    columns:
+      - name: order_id
+        description: "UUID primary key for the order."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer identifier referenced by the order."
+        data_type: varchar
+        meta: {pii: false}
+      - name: product_id
+        description: "Product identifier referenced by the order."
+        data_type: varchar
+        meta: {pii: false}
+      - name: order_date
+        description: "Timestamp when the order was placed."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: quantity
+        description: "Number of units ordered."
+        data_type: integer
+        meta: {pii: false}
+      - name: unit_price
+        description: "Unit price captured at order time."
+        data_type: double
+        meta: {pii: false}
+      - name: total_amount
+        description: "Extended order amount."
+        data_type: double
+        meta: {pii: false}
+      - name: status
+        description: "Current order lifecycle status."
+        data_type: varchar
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the source order record was created."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from Bronze."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "Stable dlt row hash used as the incremental unique key."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: _loaded_at
+        description: "Timestamp when the Silver transformation ran."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _source
+        description: "Literal source identifier for the Faker orders file."
+        data_type: varchar
+        meta: {pii: false}
+
+  - name: faker_returns
+    description: "Cleaned and deduplicated return records from the Faker Bronze file source."
+    columns:
+      - name: return_id
+        description: "UUID primary key for the return."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Order identifier associated with the return."
+        data_type: varchar
+        meta: {pii: false}
+      - name: product_id
+        description: "Product identifier associated with the return."
+        data_type: varchar
+        meta: {pii: false}
+      - name: return_date
+        description: "Timestamp when the return was initiated."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: reason
+        description: "Return reason code."
+        data_type: varchar
+        meta: {pii: false}
+      - name: refund_amount
+        description: "Refund amount issued for the return."
+        data_type: double
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the source return record was created."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from Bronze."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "Stable dlt row hash used as the incremental unique key."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: _loaded_at
+        description: "Timestamp when the Silver transformation ran."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _source
+        description: "Literal source identifier for the Faker returns file."
+        data_type: varchar
+        meta: {pii: false}
