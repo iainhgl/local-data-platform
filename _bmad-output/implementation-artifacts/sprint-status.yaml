@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-25
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 project: local-data-platform
 project_key: NOKEY
 tracking_system: file-system
@@ -54,7 +54,7 @@ development_status:
   2-1-faker-synthetic-data-generator: done
   2-2-dlt-file-source-ingestion-to-bronze: done
   2-3-dlt-api-source-ingestion-to-bronze: done
-  2-4-silver-layer-dbt-models-with-medallion-structure: backlog
+  2-4-silver-layer-dbt-models-with-medallion-structure: done
   2-5-quarantine-models-for-failed-record-capture: backlog
   2-6-gold-layer-facts-dimensions-and-marts: backlog
   2-7-metricflow-semantic-layer: backlog
