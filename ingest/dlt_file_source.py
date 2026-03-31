@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 import dlt
+import duckdb
 
 DATA_DIR = Path(os.environ.get("FAKER_OUTPUT_DIR", "data"))
 DUCKDB_PATH = os.environ.get("DBT_DUCKDB_PATH", "dev.duckdb")
@@ -50,7 +51,11 @@ def main():
             dataset_name="bronze",
         )
         load_info = pipeline.run(faker_file_source())
-        print(load_info)
+        conn = duckdb.connect(DUCKDB_PATH, read_only=True)
+        for entity in ENTITIES:
+            count = conn.execute(f"SELECT COUNT(*) FROM bronze.{entity}").fetchone()[0]
+            print(f"✓ {entity}: {count} rows")
+        conn.close()
     except Exception as e:
         print(json.dumps({"level": "ERROR", "pipeline": "faker_file", "error": str(e)}))
         sys.exit(1)

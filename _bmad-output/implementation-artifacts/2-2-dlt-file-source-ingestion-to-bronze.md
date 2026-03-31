@@ -50,6 +50,10 @@ So that raw data lands immutably with auditable provenance before any transforma
   - [ ] AC3: Second pipeline run does not increase row count
   - [ ] AC4: No dbt materializations in bronze schema
 
+### Review Findings
+
+- [x] [Review][Patch] Success output does not include the per-table row summary promised by the story [`ingest/dlt_file_source.py:52`]
+
 ## Dev Notes
 
 ### dlt Pipeline Implementation Pattern
