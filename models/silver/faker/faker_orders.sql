@@ -14,7 +14,9 @@ WITH source_data AS (
 deduplicated AS (
     SELECT
         *,
-        ROW_NUMBER() OVER (PARTITION BY _dlt_id ORDER BY _dlt_load_id DESC) AS _row_num
+        ROW_NUMBER() OVER (
+            PARTITION BY _dlt_id ORDER BY _dlt_load_id DESC
+        ) AS _row_num
     FROM source_data
 ),
 
@@ -31,8 +33,8 @@ final AS (
         created_at,
         _dlt_load_id,
         _dlt_id,
-        CURRENT_TIMESTAMP AS _loaded_at,
-        'faker_orders_file' AS _source
+        'faker_orders_file' AS _source,
+        CURRENT_TIMESTAMP AS _loaded_at
     FROM deduplicated
     WHERE _row_num = 1
 )
