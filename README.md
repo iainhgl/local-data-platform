@@ -22,7 +22,7 @@ A self-contained, profile-switchable local data platform for learning modern dat
 | **Epic 2** | **Simple Profile — First Working Pipeline (MVP)** | **in-progress** |
 | 2.1 | Faker synthetic data generator | ✅ done |
 | 2.2 | dlt file source ingestion to bronze | ✅ done |
-| 2.3 | dlt API source ingestion to bronze | backlog |
+| 2.3 | dlt API source ingestion to bronze | ✅ done |
 | 2.4 | Silver layer dbt models with medallion structure | backlog |
 | 2.5 | Quarantine models for failed record capture | backlog |
 | 2.6 | Gold layer facts, dimensions and marts | backlog |

@@ -179,3 +179,71 @@ sources:
             description: "dlt row-level hash"
             data_type: varchar
             meta: {pii: false}
+
+  - name: jsonplaceholder
+    description: "JSONPlaceholder public REST API data loaded to Bronze by dlt (Story 2.3). Posts and users only — not referenced by Silver models."
+    schema: bronze
+    tables:
+      - name: posts
+        description: "JSONPlaceholder posts — 100 records, fixed dataset"
+        columns:
+          - name: id
+            description: "Post primary key (integer)"
+            data_type: bigint
+            meta: {pii: false}
+          - name: user_id
+            description: "FK to users.id (dlt snake_cases userId to user_id)"
+            data_type: bigint
+            meta: {pii: false}
+          - name: title
+            description: "Post title"
+            data_type: varchar
+            meta: {pii: false}
+          - name: body
+            description: "Post body text"
+            data_type: varchar
+            meta: {pii: false}
+          - name: _dlt_load_id
+            description: "dlt load batch identifier"
+            data_type: varchar
+            meta: {pii: false}
+          - name: _dlt_id
+            description: "dlt row-level hash"
+            data_type: varchar
+            meta: {pii: false}
+
+      - name: users
+        description: "JSONPlaceholder users — 10 records. Nested address/company fields are dlt-flattened into address__* and company__* columns (not declared here)."
+        columns:
+          - name: id
+            description: "User primary key (integer)"
+            data_type: bigint
+            meta: {pii: false}
+          - name: name
+            description: "Full name — PII"
+            data_type: varchar
+            meta: {pii: true}
+          - name: username
+            description: "Username handle"
+            data_type: varchar
+            meta: {pii: false}
+          - name: email
+            description: "Email address — PII"
+            data_type: varchar
+            meta: {pii: true}
+          - name: phone
+            description: "Phone number — PII"
+            data_type: varchar
+            meta: {pii: true}
+          - name: website
+            description: "Personal website URL"
+            data_type: varchar
+            meta: {pii: false}
+          - name: _dlt_load_id
+            description: "dlt load batch identifier"
+            data_type: varchar
+            meta: {pii: false}
+          - name: _dlt_id
+            description: "dlt row-level hash"
+            data_type: varchar
+            meta: {pii: false}
