@@ -52,7 +52,7 @@ development_status:
   # Epic 2: Simple Profile — First Working Pipeline (MVP)
   epic-2: in-progress
   2-1-faker-synthetic-data-generator: done
-  2-2-dlt-file-source-ingestion-to-bronze: ready-for-dev
+  2-2-dlt-file-source-ingestion-to-bronze: done
   2-3-dlt-api-source-ingestion-to-bronze: backlog
   2-4-silver-layer-dbt-models-with-medallion-structure: backlog
   2-5-quarantine-models-for-failed-record-capture: backlog
