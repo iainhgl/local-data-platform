@@ -1,6 +1,6 @@
 # Story 2.2: dlt File Source Ingestion to Bronze
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
