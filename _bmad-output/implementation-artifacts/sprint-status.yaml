@@ -55,7 +55,7 @@ development_status:
   2-2-dlt-file-source-ingestion-to-bronze: done
   2-3-dlt-api-source-ingestion-to-bronze: done
   2-4-silver-layer-dbt-models-with-medallion-structure: done
-  2-5-quarantine-models-for-failed-record-capture: backlog
+  2-5-quarantine-models-for-failed-record-capture: ready-for-dev
   2-6-gold-layer-facts-dimensions-and-marts: backlog
   2-7-metricflow-semantic-layer: backlog
   2-8-dbt-tests-dbt-expectations-and-source-freshness: backlog
