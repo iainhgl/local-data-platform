@@ -58,6 +58,9 @@ models:
         description: "Literal source identifier for the Gold customer dimension."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['dim_customers']
       - name: _loaded_at
         description: "Timestamp when the Gold transformation ran."
         data_type: timestamp with time zone
@@ -108,6 +111,9 @@ models:
         description: "Literal source identifier for the Gold product dimension."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['dim_products']
       - name: _loaded_at
         description: "Timestamp when the Gold transformation ran."
         data_type: timestamp with time zone

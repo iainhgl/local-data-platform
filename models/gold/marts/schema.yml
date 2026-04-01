@@ -106,6 +106,9 @@ models:
         description: "Literal source identifier for the Gold mart model."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['orders_mart']
       - name: _loaded_at
         description: "Timestamp when the Gold mart transformation ran."
         data_type: timestamp with time zone

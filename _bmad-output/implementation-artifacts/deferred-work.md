@@ -1,5 +1,10 @@
 # Deferred Work
 
+## Deferred from: code review of 2-8-dbt-tests-dbt-expectations-and-source-freshness (2026-04-01)
+
+- `order_date` and `return_date` have no `not_null` or temporal range tests — FK columns guarded in this story but temporal keys remain uncovered across faker_orders and faker_returns; address when Silver model coverage is expanded
+- No upper-bound tests on `quantity`, `unit_price`, or `total_amount` — extreme outliers from Faker or data corruption pass silently; add max_value bounds when numeric test coverage is revisited
+
 ## Deferred from: code review of 2-6-gold-layer-facts-dimensions-and-marts (2026-04-01)
 
 - Silver incremental `_dlt_load_id` watermark non-monotonic — pre-existing pattern in all Silver models; late-arriving or backfilled batches with a lower load_id than current max are silently skipped forever; address holistically when Silver models are revisited
