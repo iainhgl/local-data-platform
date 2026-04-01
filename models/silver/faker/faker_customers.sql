@@ -1,5 +1,5 @@
 {{ config(
-    unique_key="_dlt_id",
+    unique_key="customer_id",
     incremental_strategy="delete+insert"
 ) }}
 
@@ -15,7 +15,7 @@ deduplicated AS (
     SELECT
         *,
         ROW_NUMBER() OVER (
-            PARTITION BY _dlt_id ORDER BY _dlt_load_id DESC
+            PARTITION BY customer_id ORDER BY _dlt_load_id DESC
         ) AS _row_num
     FROM source_data
 ),
