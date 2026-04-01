@@ -26,10 +26,7 @@ final AS (
         o._dlt_load_id,
         o._dlt_id,
         'fct_orders' AS _source,
-        CASE
-            WHEN r.return_id IS NOT NULL THEN TRUE
-            ELSE FALSE
-        END AS has_return,
+        r.return_id IS NOT NULL AS has_return,
         CURRENT_TIMESTAMP AS _loaded_at
     FROM orders AS o
     LEFT JOIN returns AS r
