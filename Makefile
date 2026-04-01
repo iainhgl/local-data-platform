@@ -28,6 +28,7 @@ run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr r
 	@echo "▶  Running dbt test..."
 	@dbt test
 	@echo "▶  Generating Elementary report..."
+	@mkdir -p edr_target
 	@edr report --profiles-dir . --profile local_data_platform --target elementary
 	@echo "✔  Pipeline complete — run make open-docs to view dashboards"
 

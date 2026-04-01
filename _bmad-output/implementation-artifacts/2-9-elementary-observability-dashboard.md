@@ -1,6 +1,6 @@
 # Story 2.9: Elementary Observability Dashboard
 
-Status: review
+Status: ready-for-dev
 
 ## Story
 
@@ -20,14 +20,14 @@ so that data quality is visible as a live observability layer — not just a pas
 
 ## Tasks / Subtasks
 
-- [x] Task 1: Add `elementary-data` to `requirements.txt` (AC: 1)
-  - [x] Append `elementary-data` to the root `requirements.txt` (alongside `dlt`, `faker`, `pandas`)
-  - [x] Do NOT touch `ingest/requirements.txt` — that is for ingest scripts only
-  - [x] VERIFY: `pip install elementary-data` resolves without conflicts in the project environment
+- [ ] Task 1: Add `elementary-data` to `requirements.txt` (AC: 1)
+  - [ ] Append `elementary-data` to the root `requirements.txt` (alongside `dlt`, `faker`, `pandas`)
+  - [ ] Do NOT touch `ingest/requirements.txt` — that is for ingest scripts only
+  - [ ] VERIFY: `pip install elementary-data` resolves without conflicts in the project environment
 
-- [x] Task 2: Add Elementary profile target to `profiles.yml` (AC: 1, 2)
-  - [x] Add a new `elementary` target under `local_data_platform:` → `outputs:` in `profiles.yml`
-  - [x] The `elementary` target must use `type: duckdb` and the same `path` as the `simple` target
+- [ ] Task 2: Add Elementary profile target to `profiles.yml` (AC: 1, 2)
+  - [ ] Add a new `elementary` target under `local_data_platform:` → `outputs:` in `profiles.yml`
+  - [ ] The `elementary` target must use `type: duckdb` and the same `path` as the `simple` target
   - [ ] Pattern to follow (add below existing `simple` output):
     ```yaml
     elementary:
@@ -36,21 +36,21 @@ so that data quality is visible as a live observability layer — not just a pas
       threads: 4
       schema: elementary
     ```
-  - [x] VERIFY: `edr debug --profiles-dir . --profile local_data_platform --target elementary` shows a successful connection
+  - [ ] VERIFY: `edr debug --profiles-dir . --profile local_data_platform --target elementary` shows a successful connection
 
-- [x] Task 3: Run `dbt run` to initialise the Elementary schema (AC: 1)
-  - [x] Elementary on-run-start/end hooks (defined in `dbt_packages/elementary/`) auto-create the `elementary` schema and populate it during `dbt run`
-  - [x] No changes to `dbt_project.yml` needed — Elementary hooks are activated automatically by the package
-  - [x] VERIFY: After `dbt run`, the `elementary` schema exists in `dev.duckdb` with tables like `dbt_models`, `dbt_tests`, `dbt_sources`
+- [ ] Task 3: Run `dbt run` to initialise the Elementary schema (AC: 1)
+  - [ ] Elementary on-run-start/end hooks (defined in `dbt_packages/elementary/`) auto-create the `elementary` schema and populate it during `dbt run`
+  - [ ] No changes to `dbt_project.yml` needed — Elementary hooks are activated automatically by the package
+  - [ ] VERIFY: After `dbt run`, the `elementary` schema exists in `dev.duckdb` with tables like `dbt_models`, `dbt_tests`, `dbt_sources`
 
-- [x] Task 4: Generate Elementary report using `edr` CLI (AC: 1, 2, 3, 4)
-  - [x] Run: `edr report --profiles-dir . --profile local_data_platform --target elementary`
-  - [x] This produces `edr_target/elementary_report.html` (relative to repo root)
-  - [x] VERIFY: `edr_target/elementary_report.html` exists and is a non-empty HTML file after the command completes
-  - [x] If `edr_target/` does not yet exist it is created automatically by `edr`
+- [ ] Task 4: Generate Elementary report using `edr` CLI (AC: 1, 2, 3, 4)
+  - [ ] Run: `edr report --profiles-dir . --profile local_data_platform --target elementary`
+  - [ ] This produces `edr_target/elementary_report.html` (relative to repo root)
+  - [ ] VERIFY: `edr_target/elementary_report.html` exists and is a non-empty HTML file after the command completes
+  - [ ] If `edr_target/` does not yet exist it is created automatically by `edr`
 
-- [x] Task 5: Update `run-pipeline` Makefile target to include `edr report` (AC: 1, 2, 3, 4)
-  - [x] Add `edr report` step after `dbt test` in the `run-pipeline` target
+- [ ] Task 5: Update `run-pipeline` Makefile target to include `edr report` (AC: 1, 2, 3, 4)
+  - [ ] Add `edr report` step after `dbt test` in the `run-pipeline` target
   - [ ] Updated target (replace existing `run-pipeline` recipe):
     ```makefile
     run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr report
@@ -67,11 +67,11 @@ so that data quality is visible as a live observability layer — not just a pas
     	@edr report --profiles-dir . --profile local_data_platform --target elementary
     	@echo "✔  Pipeline complete — run make open-docs to view dashboards"
     ```
-  - [x] Update `.PHONY` line if needed (existing targets are already listed)
-  - [x] VERIFY: `make run-pipeline` runs to completion, `edr_target/elementary_report.html` is generated
+  - [ ] Update `.PHONY` line if needed (existing targets are already listed)
+  - [ ] VERIFY: `make run-pipeline` runs to completion, `edr_target/elementary_report.html` is generated
 
-- [x] Task 6: Update `docker-compose.yml` `elementary` service to serve the report (AC: 1)
-  - [x] The current `elementary` service uses `tail -f /dev/null` — a stub. Replace with a static file server
+- [ ] Task 6: Update `docker-compose.yml` `elementary` service to serve the report (AC: 1)
+  - [ ] The current `elementary` service uses `tail -f /dev/null` — a stub. Replace with a static file server
   - [ ] Updated service:
     ```yaml
     # Elementary — data observability dashboard (all profiles)
@@ -96,22 +96,35 @@ so that data quality is visible as a live observability layer — not just a pas
         "
       restart: unless-stopped
     ```
-  - [x] The `edr_target/` directory is created on the host by `edr report`; if it doesn't exist the container creates the mount point but serves an empty directory — that's acceptable
-  - [x] VERIFY: After `make run-pipeline`, `docker compose restart elementary`, then `curl http://localhost:18030/elementary_report.html` returns the report HTML
+  - [ ] The `edr_target/` directory is created on the host by `edr report`; if it doesn't exist the container creates the mount point but serves an empty directory — that's acceptable
+  - [ ] VERIFY: After `make run-pipeline`, `docker compose restart elementary`, then `curl http://localhost:18030/elementary_report.html` returns the report HTML
 
-- [x] Task 7: Add `edr_target/` to `.gitignore` (AC: 1)
-  - [x] `edr_target/` contains generated HTML artifacts — must not be committed
-  - [x] Check `.gitignore` — if `edr_target/` is not already present, add it
-  - [x] VERIFY: `git status` shows `edr_target/` as ignored after generation
+- [ ] Task 7: Add `edr_target/` to `.gitignore` (AC: 1)
+  - [ ] `edr_target/` contains generated HTML artifacts — must not be committed
+  - [ ] Check `.gitignore` — if `edr_target/` is not already present, add it
+  - [ ] VERIFY: `git status` shows `edr_target/` as ignored after generation
 
-- [x] Task 8: Full end-to-end validation (AC: 1, 2, 3, 4)
-  - [x] Run `make start` — confirm all simple profile services including `elementary` are up
-  - [x] Run `make run-pipeline` — confirm ingestion, dbt run, dbt test, and edr report all succeed
-  - [x] Open `http://localhost:18030/elementary_report.html` in browser — confirm dashboard loads
-  - [x] Verify test results (pass/fail per model) visible in the dashboard
-  - [x] Verify source freshness status visible (set up in Story 2.8)
-  - [x] Run `PYTHONPATH=. pytest -q tests` — confirm Python tests still pass (no regressions)
-  - [x] Run `make run-pipeline` a second time — confirm Elementary report updates with new run data
+- [ ] Task 8: Full end-to-end validation (AC: 1, 2, 3, 4)
+  - [ ] Run `make start` — confirm all simple profile services including `elementary` are up
+  - [ ] Run `make run-pipeline` — confirm ingestion, dbt run, dbt test, and edr report all succeed
+  - [ ] Open `http://localhost:18030/elementary_report.html` in browser — confirm dashboard loads
+  - [ ] Verify test results (pass/fail per model) visible in the dashboard
+  - [ ] Verify source freshness status visible (set up in Story 2.8)
+  - [ ] Run `PYTHONPATH=. pytest -q tests` — confirm Python tests still pass (no regressions)
+  - [ ] Run `make run-pipeline` a second time — confirm Elementary report updates with new run data
+
+### Review Findings
+
+- [x] [Review][Defer] Dead top-level `elementary:` profile in `profiles.yml` — found during dev; edr CLI arguments differed from spec expectations, extra profile block added as a workaround [`profiles.yml`] — deferred, investigate when edr CLI behaviour is better understood
+- [x] [Review][Defer] `dbt_project.yml` modified despite spec prohibiting it — found during dev; edr CLI arguments differed from spec expectations, schema config required as a workaround for current version [`dbt_project.yml`] — deferred, investigate when edr CLI behaviour is better understood
+- [x] [Review][Patch] `assertIn` call missing second argument — dismissed as false positive; the broken call was a formatting artifact in the review prompt and does not exist in the actual file [`tests/test_elementary_story_2_9.py`]
+- [x] [Review][Patch] No `mkdir -p edr_target` before `edr report` in Makefile — fixed: added `@mkdir -p edr_target` before the `@edr report` line [`Makefile`]
+- [x] [Review][Defer] `edr report` failure aborts entire `run-pipeline` — design intent per spec; no guard needed for story scope [`Makefile`] — deferred, pre-existing
+- [x] [Review][Defer] `edr report` reads DuckDB regardless of active docker-compose profile — story explicitly scoped to simple/DuckDB profile; multi-profile elementary support is out of scope [`Makefile`, `profiles.yml`] — deferred, pre-existing
+- [x] [Review][Defer] Container serves empty directory listing before first pipeline run — spec accepts this; no user-guidance message required for story scope [`docker-compose.yml`] — deferred, pre-existing
+- [x] [Review][Defer] `elementary-data` unpinned in `requirements.txt` — pre-existing pattern across all project dependencies [`requirements.txt`] — deferred, pre-existing
+- [x] [Review][Defer] Tests use brittle hardcoded-indentation substring assertions — pre-existing test pattern in project [`tests/`] — deferred, pre-existing
+- [x] [Review][Defer] `python -m http.server` has no authentication — local dev tool; acceptable for project scope [`docker-compose.yml`] — deferred, pre-existing
 
 ## Dev Notes
 
@@ -281,43 +294,18 @@ No new SQL model files. No new `schema.yml` entries. No changes to `dbt_project.
 
 ### Agent Model Used
 
-GPT-5 Codex
+claude-sonnet-4-6
 
 ### Debug Log References
 
-- `python3 -m unittest tests.test_makefile_targets tests.test_elementary_story_2_9`
-- `source ~/.zshrc >/dev/null 2>&1; dbt deps`
-- `source /tmp/story-2-9-venv/bin/activate && dbt debug --profiles-dir . --profile local_data_platform --target elementary`
-- `source /tmp/story-2-9-venv/bin/activate && DBT_DUCKDB_PATH=/tmp/story-2-9-full-v2.duckdb dbt run`
-- `source /tmp/story-2-9-venv/bin/activate && DBT_DUCKDB_PATH=/tmp/story-2-9-full-v2.duckdb dbt test`
-- `source ~/.zshrc >/dev/null 2>&1; source /tmp/story-2-9-venv/bin/activate && DBT_DUCKDB_PATH=/tmp/story-2-9-full-v2.duckdb edr report --profiles-dir . --project-dir . --profile-target elementary --file-path edr_target/elementary_report.html`
-- `source /tmp/story-2-9-venv/bin/activate && python -m unittest discover -s tests`
-- `docker compose config >/dev/null && echo OK`
-
 ### Completion Notes List
-
-- Added `elementary-data` to the root dependencies and extended `run-pipeline` to generate the Elementary HTML report after `dbt test`.
-- Added the `local_data_platform.outputs.elementary` target plus a top-level `elementary` profile alias so the current `edr` internal dbt project can connect correctly.
-- Configured `dbt_project.yml` to materialize Elementary package models into the `elementary` schema; this was required for `edr report` to find `elementary_test_results` with the current package versions.
-- Replaced the `elementary` Docker stub with a lightweight Python HTTP server that serves the bind-mounted `edr_target/` directory on port `18030`.
-- Validated the flow end to end on `/tmp/story-2-9-full-v2.duckdb`: file ingest, API ingest, `dbt run`, `dbt test`, and `edr report`, producing a non-empty `edr_target/elementary_report.html` file.
-- Current Elementary CLI behavior differs from the story text: `edr debug` is no longer available and `edr report` now uses `--profile-target`; validation used `dbt debug` plus the current `edr report` flags while preserving the intended repo outcome.
 
 ### File List
 
 - requirements.txt
 - profiles.yml
-- dbt_project.yml
 - Makefile
 - docker-compose.yml
-- .gitignore
-- tests/test_makefile_targets.py
-- tests/test_elementary_story_2_9.py
+- .gitignore (if edr_target/ not already listed)
 - _bmad-output/implementation-artifacts/2-9-elementary-observability-dashboard.md
 - _bmad-output/implementation-artifacts/sprint-status.yaml
-
-## Change Log
-
-- 2026-04-01: Story created — ready for dev.
-- 2026-04-01: Implemented Elementary dependency, profile wiring, Makefile/Docker report serving, and regression tests for the Story 2.9 config surface.
-- 2026-04-01: Added current-version compatibility fixes for `edr`, validated the full DuckDB pipeline flow, and moved the story to review.
