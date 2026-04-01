@@ -7,6 +7,11 @@ local_data_platform:
       type: duckdb
       path: "{{ env_var('DBT_DUCKDB_PATH', 'dev.duckdb') }}"
       threads: 4
+    elementary:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'dev.duckdb') }}"
+      threads: 4
+      schema: elementary
     postgres:
       type: postgres
       host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
@@ -32,3 +37,12 @@ local_data_platform:
       database: iceberg
       schema: silver
       threads: 4
+
+elementary:
+  target: elementary
+  outputs:
+    elementary:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'dev.duckdb') }}"
+      threads: 4
+      schema: elementary
