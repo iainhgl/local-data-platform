@@ -1,6 +1,6 @@
 # Story 2.9: Elementary Observability Dashboard
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
