@@ -35,7 +35,8 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-25
-last_updated: 2026-04-01project: local-data-platform
+last_updated: 2026-04-01
+project: local-data-platform
 project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
