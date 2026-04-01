@@ -19,6 +19,13 @@ venv/
 # Generated data files — recreated by faker_generator.py each run
 data/*.json
 
+# DuckDB local database file — recreated by dbt run
+*.duckdb
+*.duckdb.wal
+
+# dbt user config — machine-specific, not for version control
+.user.yml
+
 # OS
 .DS_Store
 Thumbs.db

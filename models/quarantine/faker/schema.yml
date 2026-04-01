@@ -1,0 +1,238 @@
+version: 2
+
+models:
+  - name: faker_customers_failed
+    description: "Rejected customer records from bronze.customers that failed the Silver completeness rules."
+    columns:
+      - name: customer_id
+        description: "UUID primary key from the Bronze customer record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: first_name
+        description: "Customer first name from the rejected source record."
+        data_type: varchar
+        meta: {pii: true}
+      - name: last_name
+        description: "Customer last name from the rejected source record."
+        data_type: varchar
+        meta: {pii: true}
+      - name: email
+        description: "Customer email address from the rejected source record."
+        data_type: varchar
+        meta: {pii: true}
+      - name: phone
+        description: "Customer phone number from the rejected source record."
+        data_type: varchar
+        meta: {pii: true}
+      - name: address
+        description: "Street address from the rejected source record."
+        data_type: varchar
+        meta: {pii: true}
+      - name: city
+        description: "City from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: country
+        description: "Two-letter country code from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the Bronze customer record was created."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from Bronze."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "dlt row-level hash for the rejected customer record."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - not_null
+      - name: _failed_reason
+        description: "Human-readable reason describing the first validation rule that failed."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - not_null
+      - name: _source
+        description: "Literal source identifier for the Faker customers file."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _failed_at
+        description: "Timestamp when the record was written to quarantine."
+        data_type: timestamp
+        meta: {pii: false}
+
+  - name: faker_products_failed
+    description: "Rejected product records from bronze.products that failed the Silver completeness rules."
+    columns:
+      - name: product_id
+        description: "UUID primary key from the Bronze product record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: product_name
+        description: "Product display name from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: category
+        description: "Product category from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: unit_price
+        description: "Unit price from the rejected source record."
+        data_type: double
+        meta: {pii: false}
+      - name: sku
+        description: "Stock keeping unit code from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the Bronze product record was created."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from Bronze."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "dlt row-level hash for the rejected product record."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - not_null
+      - name: _failed_reason
+        description: "Human-readable reason describing the first validation rule that failed."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - not_null
+      - name: _source
+        description: "Literal source identifier for the Faker products file."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _failed_at
+        description: "Timestamp when the record was written to quarantine."
+        data_type: timestamp
+        meta: {pii: false}
+
+  - name: faker_orders_failed
+    description: "Rejected order records from bronze.orders that failed the Silver completeness rules."
+    columns:
+      - name: order_id
+        description: "UUID primary key from the Bronze order record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: customer_id
+        description: "Customer identifier from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: product_id
+        description: "Product identifier from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: order_date
+        description: "Timestamp when the order was placed."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: quantity
+        description: "Quantity from the rejected source record."
+        data_type: integer
+        meta: {pii: false}
+      - name: unit_price
+        description: "Unit price captured on the rejected order."
+        data_type: double
+        meta: {pii: false}
+      - name: total_amount
+        description: "Extended order amount from the rejected source record."
+        data_type: double
+        meta: {pii: false}
+      - name: status
+        description: "Order lifecycle status from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the Bronze order record was created."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from Bronze."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "dlt row-level hash for the rejected order record."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - not_null
+      - name: _failed_reason
+        description: "Human-readable reason describing the first validation rule that failed."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - not_null
+      - name: _source
+        description: "Literal source identifier for the Faker orders file."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _failed_at
+        description: "Timestamp when the record was written to quarantine."
+        data_type: timestamp
+        meta: {pii: false}
+
+  - name: faker_returns_failed
+    description: "Rejected return records from bronze.returns that failed the Silver completeness rules."
+    columns:
+      - name: return_id
+        description: "UUID primary key from the Bronze return record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: order_id
+        description: "Order identifier from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: product_id
+        description: "Product identifier from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: return_date
+        description: "Timestamp when the return was initiated."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: reason
+        description: "Return reason from the rejected source record."
+        data_type: varchar
+        meta: {pii: false}
+      - name: refund_amount
+        description: "Refund amount from the rejected source record."
+        data_type: double
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the Bronze return record was created."
+        data_type: timestamp
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from Bronze."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "dlt row-level hash for the rejected return record."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - not_null
+      - name: _failed_reason
+        description: "Human-readable reason describing the first validation rule that failed."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - not_null
+      - name: _source
+        description: "Literal source identifier for the Faker returns file."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _failed_at
+        description: "Timestamp when the record was written to quarantine."
+        data_type: timestamp
+        meta: {pii: false}
