@@ -1,5 +1,21 @@
 # Deferred Work
 
+## Deferred from: code review of 2-5-quarantine-models-for-failed-record-capture pass 2 (2026-04-01)
+
+- `ensure_quarantine_schema` adapter guard — deferred to confirm non-DuckDB profiles are in scope; add `{% if target.type == 'duckdb' %}` guard when multi-profile support is tested
+- `dbt run-operation` in `init-duckdb` assumes dbt installed/deps run — project-wide assumption; document in README or add a pre-flight check target
+- CASE/WHERE future maintenance divergence — acceptable for now; Story 2.8 dbt tests will surface any future drift
+- `_dlt_load_id` lexicographic sort — pre-existing Silver pattern; address holistically when Silver models are revisited
+- NULL `_dlt_id` deduplication limitation — inherent to spec design; acceptable for structural-completeness quarantine
+
+## Deferred from: code review of 2-5-quarantine-models-for-failed-record-capture (2026-03-31)
+
+- `init-duckdb` runs unconditionally on every `make start` — idempotent; acceptable overhead for a local dev tool
+- Timezone-naive `_failed_at` (CURRENT_TIMESTAMP) — project-wide convention matching Silver's `_loaded_at`; address holistically
+- No extended model-level tests (accepted_values, row-count) — Story 2.8 owns extended data quality test coverage
+- NULL _dlt_id rows accumulate across incremental runs — unique_key delete+insert cannot deduplicate NULL keys; inherent spec design limitation; acceptable for structural-completeness-only quarantine
+- `_dlt_load_id` lexicographic sort — varchar > comparison works for dlt Unix timestamp strings but fragile; pre-existing Silver model pattern; address holistically
+
 ## Deferred from: code review of 2-3-dlt-api-source-ingestion-to-bronze (2026-03-31)
 
 - SQL injection f-string in table-name loop in `ingest/dlt_api_source.py` — pre-existing pattern in `dlt_file_source.py`; both use `f"SELECT COUNT(*) FROM bronze.{table}"` with hardcoded table names. Address holistically for both scripts.
