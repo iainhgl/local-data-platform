@@ -24,6 +24,7 @@ failed AS (
         created_at,
         _dlt_load_id,
         _dlt_id,
+        'faker_orders_file' AS _source,
         CASE
             WHEN _dlt_id IS NULL THEN 'missing _dlt_id'
             WHEN order_id IS NULL THEN 'missing order_id'
@@ -34,7 +35,6 @@ failed AS (
             WHEN total_amount IS NULL THEN 'missing total_amount'
             WHEN total_amount <= 0 THEN 'non-positive total_amount'
         END AS _failed_reason,
-        'faker_orders_file' AS _source,
         CURRENT_TIMESTAMP AS _failed_at
     FROM source_data
     WHERE

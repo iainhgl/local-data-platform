@@ -24,12 +24,12 @@ failed AS (
         created_at,
         _dlt_load_id,
         _dlt_id,
+        'faker_customers_file' AS _source,
         CASE
             WHEN _dlt_id IS NULL THEN 'missing _dlt_id'
             WHEN customer_id IS NULL THEN 'missing customer_id'
             WHEN email IS NULL THEN 'missing email'
         END AS _failed_reason,
-        'faker_customers_file' AS _source,
         CURRENT_TIMESTAMP AS _failed_at
     FROM source_data
     WHERE

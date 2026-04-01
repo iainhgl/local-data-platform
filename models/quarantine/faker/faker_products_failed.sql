@@ -21,6 +21,7 @@ failed AS (
         created_at,
         _dlt_load_id,
         _dlt_id,
+        'faker_products_file' AS _source,
         CASE
             WHEN _dlt_id IS NULL THEN 'missing _dlt_id'
             WHEN product_id IS NULL THEN 'missing product_id'
@@ -28,7 +29,6 @@ failed AS (
             WHEN unit_price IS NULL THEN 'missing unit_price'
             WHEN unit_price <= 0 THEN 'non-positive unit_price'
         END AS _failed_reason,
-        'faker_products_file' AS _source,
         CURRENT_TIMESTAMP AS _failed_at
     FROM source_data
     WHERE
