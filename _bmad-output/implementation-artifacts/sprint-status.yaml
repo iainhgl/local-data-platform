@@ -62,7 +62,8 @@ development_status:
   2-9-elementary-observability-dashboard: backlog
   2-10-lightdash-bi-dashboard: backlog
   2-11-evidence-analytical-reports: backlog
-  2-12-make-run-pipeline-and-make-open-docs-commands: backlog
+  2-12-make-run-pipeline-and-make-open-docs-commands: done
+  2-12b-silver-incremental-idempotency-fix: ready-for-dev
   2-13-dbt-documentation-and-column-lineage: backlog
   2-14-cron-schedule-and-readme: backlog
   epic-2-retrospective: optional

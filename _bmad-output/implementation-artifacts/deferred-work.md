@@ -5,6 +5,17 @@
 - `order_date` and `return_date` have no `not_null` or temporal range tests — FK columns guarded in this story but temporal keys remain uncovered across faker_orders and faker_returns; address when Silver model coverage is expanded
 - No upper-bound tests on `quantity`, `unit_price`, or `total_amount` — extreme outliers from Faker or data corruption pass silently; add max_value bounds when numeric test coverage is revisited
 
+## Deferred from: code review of 2-12-make-run-pipeline-and-make-open-docs-commands (2026-04-01)
+
+- `_target_block` parser in `tests/test_makefile_targets.py` terminates block collection on any blank line — a blank line within a Make recipe body (valid syntax) would silently return a truncated block; not triggered by current Makefile but fragile
+- Tests in `tests/test_makefile_targets.py` verify Makefile text content, not runtime execution — ingest scripts, dbt, and browser-open are not exercised; design choice for this unit-level test but provides no runtime confidence
+- Ingest scripts (`ingest/dlt_file_source.py`, `ingest/dlt_api_source.py`) may exit 0 even on partial pipeline failure — Make would continue to `dbt run` against incomplete Bronze data; address when ingest script error handling is revisited holistically
+- `PYTHONPATH=.` in `run-pipeline` clobbers any pre-existing `PYTHONPATH` in the caller environment — `PYTHONPATH=.:$(PYTHONPATH)` would be safer for CI environments; consistent with established project pattern
+
+## Deferred from: story 2-12 validation (2026-04-01)
+
+- Second `make run-pipeline` run fails uniqueness tests across Silver and Gold models (`faker_customers.customer_id`, `faker_products.product_id`, `faker_orders.order_id`, `faker_returns.return_id`, `dim_customers.customer_id`, `dim_products.product_id`, `fct_orders.order_id`, `orders_mart.order_id`) even after the orphaned `jaffle_shop_*` seed scaffold is removed. This should be treated as the concrete rerun symptom of the pre-existing Silver incremental `_dlt_load_id` deferred work from Story 2.4, not as a new isolated Makefile issue. Trace back to: "Deferred from: code review of 2-4-silver-layer-dbt-models-with-medallion-structure (2026-03-31)" and the related Silver `_dlt_load_id` watermark / ordering bullets below.
+
 ## Deferred from: code review of 2-6-gold-layer-facts-dimensions-and-marts (2026-04-01)
 
 - Silver incremental `_dlt_load_id` watermark non-monotonic — pre-existing pattern in all Silver models; late-arriving or backfilled batches with a lower load_id than current max are silently skipped forever; address holistically when Silver models are revisited

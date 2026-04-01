@@ -18,10 +18,24 @@ stop: ## Stop all running services
 	@docker compose down
 
 run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test
-	@echo "Pipeline implementation in Story 2"
+	@test -f .env || (echo "❌  .env not found. Create it first: cp .env.example .env" && exit 1)
+	@echo "▶  Running ingestion (file source)..."
+	@PYTHONPATH=. python ingest/dlt_file_source.py
+	@echo "▶  Running ingestion (API source)..."
+	@PYTHONPATH=. python ingest/dlt_api_source.py
+	@echo "▶  Running dbt run..."
+	@dbt run
+	@echo "▶  Running dbt test..."
+	@dbt test
+	@echo "✔  Pipeline complete — run make open-docs to view dashboards"
 
-open-docs: ## Open dbt docs and Elementary dashboard in browser
-	@echo "Implementation in Story 2"
+open-docs: ## Open dashboards: Lightdash (18000) Evidence (18010) dbt docs (18020) Elementary (18030)
+	@echo "▶  Opening dashboards..."
+	@open http://localhost:18000 2>/dev/null || xdg-open http://localhost:18000 2>/dev/null || echo "ℹ  Lightdash:   http://localhost:18000"
+	@open http://localhost:18010 2>/dev/null || xdg-open http://localhost:18010 2>/dev/null || echo "ℹ  Evidence:    http://localhost:18010"
+	@open http://localhost:18020 2>/dev/null || xdg-open http://localhost:18020 2>/dev/null || echo "ℹ  dbt docs:    http://localhost:18020"
+	@open http://localhost:18030 2>/dev/null || xdg-open http://localhost:18030 2>/dev/null || echo "ℹ  Elementary:  http://localhost:18030"
+	@echo "✔  Dashboards opened"
 
 install: ## Install dbt packages (dbt deps)
 	dbt deps
