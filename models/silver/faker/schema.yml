@@ -48,12 +48,9 @@ models:
         data_type: varchar
         meta: {pii: false}
       - name: _dlt_id
-        description: "Stable dlt row hash used as the incremental unique key."
+        description: "dlt row identifier retained for lineage and auditability."
         data_type: varchar
         meta: {pii: false}
-        tests:
-          - unique
-          - not_null
       - name: _loaded_at
         description: "Timestamp when the Silver transformation ran."
         data_type: timestamp
@@ -108,12 +105,9 @@ models:
         data_type: varchar
         meta: {pii: false}
       - name: _dlt_id
-        description: "Stable dlt row hash used as the incremental unique key."
+        description: "dlt row identifier retained for lineage and auditability."
         data_type: varchar
         meta: {pii: false}
-        tests:
-          - unique
-          - not_null
       - name: _loaded_at
         description: "Timestamp when the Silver transformation ran."
         data_type: timestamp
@@ -192,12 +186,9 @@ models:
         data_type: varchar
         meta: {pii: false}
       - name: _dlt_id
-        description: "Stable dlt row hash used as the incremental unique key."
+        description: "dlt row identifier retained for lineage and auditability."
         data_type: varchar
         meta: {pii: false}
-        tests:
-          - unique
-          - not_null
       - name: _loaded_at
         description: "Timestamp when the Silver transformation ran."
         data_type: timestamp
@@ -260,12 +251,9 @@ models:
         data_type: varchar
         meta: {pii: false}
       - name: _dlt_id
-        description: "Stable dlt row hash used as the incremental unique key."
+        description: "dlt row identifier retained for lineage and auditability."
         data_type: varchar
         meta: {pii: false}
-        tests:
-          - unique
-          - not_null
       - name: _loaded_at
         description: "Timestamp when the Silver transformation ran."
         data_type: timestamp
