@@ -59,7 +59,9 @@ services:
     profiles: ["simple", "postgres", "lakehouse", "full"]
     ports:
       - "18030:8080"
-    command: tail -f /dev/null
+    volumes:
+      - "./edr_target:/workspace/edr_target"
+    command: sh -c "mkdir -p /workspace/edr_target && python -m http.server 8080 --directory /workspace/edr_target"
     restart: unless-stopped
 
   # Postgres — data warehouse (postgres, full profiles)

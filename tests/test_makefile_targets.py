@@ -43,6 +43,11 @@ class MakefileTargetsTests(unittest.TestCase):
         self.assertIn("@dbt run", block)
         self.assertIn('@echo "▶  Running dbt test..."', block)
         self.assertIn("@dbt test", block)
+        self.assertIn('@echo "▶  Generating Elementary report..."', block)
+        self.assertIn(
+            "@edr report --profiles-dir . --profile local_data_platform --target elementary",
+            block,
+        )
         self.assertIn(
             '@echo "✔  Pipeline complete — run make open-docs to view dashboards"',
             block,

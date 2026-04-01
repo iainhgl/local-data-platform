@@ -1,3 +1,4 @@
 dlt
 faker
 pandas
+elementary-data

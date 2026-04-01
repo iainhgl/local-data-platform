@@ -59,7 +59,7 @@ development_status:
   2-6-gold-layer-facts-dimensions-and-marts: done
   2-7-metricflow-semantic-layer: backlog
   2-8-dbt-tests-dbt-expectations-and-source-freshness: done
-  2-9-elementary-observability-dashboard: backlog
+  2-9-elementary-observability-dashboard: review
   2-10-lightdash-bi-dashboard: backlog
   2-11-evidence-analytical-reports: backlog
   2-12-make-run-pipeline-and-make-open-docs-commands: done

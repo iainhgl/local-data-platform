@@ -30,3 +30,5 @@ models:
       +schema: metrics
       +materialized: table
       +tags: ['metrics']
+  elementary:
+    +schema: elementary

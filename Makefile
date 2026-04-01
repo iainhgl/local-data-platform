@@ -17,7 +17,7 @@ init-duckdb: ## Initialise the local DuckDB file with required schemas
 stop: ## Stop all running services
 	@docker compose down
 
-run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test
+run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr report
 	@test -f .env || (echo "❌  .env not found. Create it first: cp .env.example .env" && exit 1)
 	@echo "▶  Running ingestion (file source)..."
 	@PYTHONPATH=. python ingest/dlt_file_source.py
@@ -27,6 +27,8 @@ run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test
 	@dbt run
 	@echo "▶  Running dbt test..."
 	@dbt test
+	@echo "▶  Generating Elementary report..."
+	@edr report --profiles-dir . --profile local_data_platform --target elementary
 	@echo "✔  Pipeline complete — run make open-docs to view dashboards"
 
 open-docs: ## Open dashboards: Lightdash (18000) Evidence (18010) dbt docs (18020) Elementary (18030)
