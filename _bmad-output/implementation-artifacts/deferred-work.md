@@ -1,5 +1,12 @@
 # Deferred Work
 
+## Deferred from: code review of 2-6-gold-layer-facts-dimensions-and-marts (2026-04-01)
+
+- Silver incremental `_dlt_load_id` watermark non-monotonic — pre-existing pattern in all Silver models; late-arriving or backfilled batches with a lower load_id than current max are silently skipped forever; address holistically when Silver models are revisited
+- `_source` literal hardcoded with no `accepted_values` test across all Gold models — Story 2.8 owns extended data quality test coverage
+- `ensure_quarantine_schema` silently no-ops for non-duckdb-derived target types (e.g. motherduck adapter) — acceptable for local dev tool; revisit when multi-profile support is added
+- `init-duckdb` success echo prints even if dbt skips schema creation due to target type mismatch — make exits non-zero on actual dbt failure; acceptable for local dev tool
+
 ## Deferred from: code review of 2-5-quarantine-models-for-failed-record-capture pass 2 (2026-04-01)
 
 - `ensure_quarantine_schema` adapter guard — deferred to confirm non-DuckDB profiles are in scope; add `{% if target.type == 'duckdb' %}` guard when multi-profile support is tested
