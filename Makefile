@@ -1,4 +1,4 @@
-.PHONY: help start stop run-pipeline open-docs install profiles
+.PHONY: help start stop run-pipeline open-docs install profiles init-duckdb
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -7,6 +7,12 @@ start: ## Start all services for the active COMPOSE_PROFILES
 	@test -f .env || (echo "❌  .env not found. Create it first: cp .env.example .env" && exit 1)
 	@echo "▶  Starting profile: $$(grep -E '^COMPOSE_PROFILES=' .env | cut -d= -f2)"
 	@docker compose up -d
+	@$(MAKE) init-duckdb
+
+init-duckdb: ## Initialise the local DuckDB file with required schemas
+	@test -f .env || (echo "❌  .env not found. Create it first: cp .env.example .env" && exit 1)
+	@dbt run-operation ensure_quarantine_schema
+	@echo "✔  Ensured DuckDB schema exists: quarantine"
 
 stop: ## Stop all running services
 	@docker compose down

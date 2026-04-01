@@ -1,0 +1,114 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension snapshot sourced from the Silver customers model."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: customer_id
+        description: "UUID primary key for the customer."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "Customer first name."
+        data_type: varchar
+        meta: {pii: true}
+      - name: last_name
+        description: "Customer last name."
+        data_type: varchar
+        meta: {pii: true}
+      - name: email
+        description: "Customer email address."
+        data_type: varchar
+        meta: {pii: true}
+      - name: phone
+        description: "Customer phone number."
+        data_type: varchar
+        meta: {pii: true}
+      - name: address
+        description: "Customer street address."
+        data_type: varchar
+        meta: {pii: true}
+      - name: city
+        description: "City portion of the customer address."
+        data_type: varchar
+        meta: {pii: false}
+      - name: country
+        description: "Two-letter country code."
+        data_type: varchar
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the source customer record was created."
+        data_type: timestamp with time zone
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from the Silver customers model."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "Stable dlt row hash inherited from the Silver customers model."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _source
+        description: "Literal source identifier for the Gold customer dimension."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _loaded_at
+        description: "Timestamp when the Gold transformation ran."
+        data_type: timestamp with time zone
+        meta: {pii: false}
+
+  - name: dim_products
+    description: "Product dimension snapshot sourced from the Silver products model."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: product_id
+        description: "UUID primary key for the product."
+        data_type: varchar
+        meta: {pii: false}
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Product display name."
+        data_type: varchar
+        meta: {pii: false}
+      - name: category
+        description: "Product category label."
+        data_type: varchar
+        meta: {pii: false}
+      - name: unit_price
+        description: "Unit price in USD."
+        data_type: double
+        meta: {pii: false}
+      - name: sku
+        description: "Stock keeping unit code."
+        data_type: varchar
+        meta: {pii: false}
+      - name: created_at
+        description: "Timestamp when the source product record was created."
+        data_type: timestamp with time zone
+        meta: {pii: false}
+      - name: _dlt_load_id
+        description: "dlt load batch identifier inherited from the Silver products model."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _dlt_id
+        description: "Stable dlt row hash inherited from the Silver products model."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _source
+        description: "Literal source identifier for the Gold product dimension."
+        data_type: varchar
+        meta: {pii: false}
+      - name: _loaded_at
+        description: "Timestamp when the Gold transformation ran."
+        data_type: timestamp with time zone
+        meta: {pii: false}
