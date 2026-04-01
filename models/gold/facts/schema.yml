@@ -80,6 +80,9 @@ models:
         description: "Literal source identifier for the Gold fact model."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['fct_orders']
       - name: has_return
         description: "TRUE when a return record exists for the order."
         data_type: boolean

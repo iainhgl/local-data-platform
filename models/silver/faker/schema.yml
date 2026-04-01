@@ -62,6 +62,9 @@ models:
         description: "Literal source identifier for the Faker customers file."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['faker_customers_file']
 
   - name: faker_products
     description: "Cleaned and deduplicated product records from the Faker Bronze file source."
@@ -81,10 +84,17 @@ models:
         description: "Product category label."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['Electronics', 'Clothing', 'Home', 'Books', 'Sports', 'Toys']
       - name: unit_price
         description: "Unit price in USD."
         data_type: double
         meta: {pii: false}
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              strictly: true
       - name: sku
         description: "Stock keeping unit code."
         data_type: varchar
@@ -112,6 +122,9 @@ models:
         description: "Literal source identifier for the Faker products file."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['faker_products_file']
 
   - name: faker_orders
     description: "Cleaned and deduplicated order records from the Faker Bronze file source."
@@ -127,10 +140,14 @@ models:
         description: "Customer identifier referenced by the order."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - not_null
       - name: product_id
         description: "Product identifier referenced by the order."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - not_null
       - name: order_date
         description: "Timestamp when the order was placed."
         data_type: timestamp
@@ -139,18 +156,33 @@ models:
         description: "Number of units ordered."
         data_type: integer
         meta: {pii: false}
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              strictly: false
       - name: unit_price
-        description: "Unit price captured at order time."
+        description: "Unit price captured at order time. Allows zero — promotional/free-item orders are valid; contrast with faker_products.unit_price which is strictly positive."
         data_type: double
         meta: {pii: false}
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              strictly: false  # intentional: orders may have $0 unit price (promotions); faker_products.unit_price uses strictly: true
       - name: total_amount
         description: "Extended order amount."
         data_type: double
         meta: {pii: false}
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              strictly: false
       - name: status
         description: "Current order lifecycle status."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['pending', 'shipped', 'delivered', 'cancelled', 'returned']
       - name: created_at
         description: "Timestamp when the source order record was created."
         data_type: timestamp
@@ -174,6 +206,9 @@ models:
         description: "Literal source identifier for the Faker orders file."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['faker_orders_file']
 
   - name: faker_returns
     description: "Cleaned and deduplicated return records from the Faker Bronze file source."
@@ -189,10 +224,14 @@ models:
         description: "Order identifier associated with the return."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - not_null
       - name: product_id
         description: "Product identifier associated with the return."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - not_null
       - name: return_date
         description: "Timestamp when the return was initiated."
         data_type: timestamp
@@ -201,10 +240,17 @@ models:
         description: "Return reason code."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['defective', 'wrong_item', 'not_as_described', 'changed_mind', 'damaged_in_transit']
       - name: refund_amount
-        description: "Refund amount issued for the return."
+        description: "Refund amount issued for the return. Bronze source documents this as 50-100% of original total_amount; test uses strictly: false as a defensive floor guard rather than enforcing the upper-bound contract."
         data_type: double
         meta: {pii: false}
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              strictly: false  # intentional: floor guard only; Bronze docs say 50-100% of total_amount but percentage enforcement is out of scope
       - name: created_at
         description: "Timestamp when the source return record was created."
         data_type: timestamp
@@ -228,3 +274,6 @@ models:
         description: "Literal source identifier for the Faker returns file."
         data_type: varchar
         meta: {pii: false}
+        tests:
+          - accepted_values:
+              values: ['faker_returns_file']
