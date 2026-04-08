@@ -24,20 +24,22 @@ A self-contained, profile-switchable local data platform for learning modern dat
 | 2.2 | dlt file source ingestion to bronze | ✅ done |
 | 2.3 | dlt API source ingestion to bronze | ✅ done |
 | 2.4 | Silver layer dbt models with medallion structure | ✅ done |
-| 2.5 | Quarantine models for failed record capture | backlog |
-| 2.6 | Gold layer facts, dimensions and marts | backlog |
+| 2.5 | Quarantine models for failed record capture | ✅ done |
+| 2.6 | Gold layer facts, dimensions and marts | ✅ done |
 | 2.7 | MetricFlow semantic layer | backlog |
-| 2.8 | dbt tests, dbt-expectations and source freshness | backlog |
-| 2.9 | Elementary observability dashboard | backlog |
-| 2.10 | Lightdash BI dashboard | backlog |
-| 2.11 | Evidence analytical reports | backlog |
-| 2.12 | make run-pipeline and make open-docs commands | backlog |
+| 2.8 | dbt tests, dbt-expectations and source freshness | ✅ done |
+| 2.9 | Elementary observability dashboard | ✅ done |
+| 2.10 | Lightdash BI dashboard | deferred → 3.4 |
+| 2.11 | Evidence analytical reports | ✅ done |
+| 2.12 | make run-pipeline and make open-docs commands | ✅ done |
+| 2.12b | Silver incremental idempotency fix | ✅ done |
 | 2.13 | dbt documentation and column lineage | backlog |
 | 2.14 | Cron schedule and README | backlog |
 | **Epic 3** | **Postgres Profile — Server Warehouse & Governance** | **backlog** |
 | 3.1 | Postgres profile Docker Compose and dbt adapter | backlog |
 | 3.2 | Three-role RBAC and PII column masking | backlog |
 | 3.3 | dbt schema contracts on serving layer | backlog |
+| 3.4 | Lightdash BI dashboard | backlog |
 | **Epic 4** | **Lakehouse Profile — Open Table Format & Distributed Query** | **backlog** |
 | 4.1 | Lakehouse profile — MinIO, Iceberg and Trino | backlog |
 | 4.2 | NYC Taxi dataset and schema evolution | backlog |
@@ -57,10 +59,10 @@ All services use a high-base port range (18000+) with 10-unit increments to avoi
 
 | Service | Host Port | Profile(s) | Status |
 |---|---|---|---|
-| Lightdash (BI dashboard) | 18000 | all | Active |
-| Evidence (analytical reports) | 18010 | all | Stub — configured in Story 2.11 |
+| Lightdash (BI dashboard) | 18000 | all | Stub — DuckDB adapter pending upstream; full support in Story 3.4 (Postgres) |
+| Evidence (analytical reports) | 18010 | all | Active |
 | dbt docs | 18020 | all | Stub — configured in Story 2.13 |
-| Elementary (observability) | 18030 | all | Stub — configured in Story 2.9 |
+| Elementary (observability) | 18030 | all | Active |
 | Postgres (data warehouse) | 18040 | postgres, full | Stub — used from Story 2 onwards |
 | MinIO console | 18050 | lakehouse, full | Stub — configured in Story 4.1 |
 | MinIO API (S3-compatible) | 18060 | lakehouse, full | Stub — configured in Story 4.1 |

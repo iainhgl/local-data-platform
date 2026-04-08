@@ -1,5 +1,11 @@
 # Deferred Work
 
+## Deferred from: code review of 2-11-evidence-analytical-reports (2026-04-08)
+
+- Dual Evidence plugin config files (`evidence.plugins.yaml` + `evidence.config.yaml`) with different key formats — scaffold generates `evidence.config.yaml` (newer `datasources:` format); investigate whether `evidence.plugins.yaml` is still read by Evidence v40 or can be removed
+- Evidence container starts before pipeline has run — no `depends_on` in docker-compose; Evidence shows empty data on first start; acceptable for local dev workflow but could be improved with a startup ordering note in README
+- `package.json` includes 12 unused connector dependencies from template scaffold — bloats npm install time; consider trimming to only `@evidence-dev/duckdb` and core packages in a future story
+
 ## Deferred from: code review of 2-9-elementary-observability-dashboard (2026-04-08)
 
 - `open-docs` target opens `http://localhost:18030/` (directory listing) not `/elementary_report.html` directly — minor UX issue; could update `open-docs` URL to `/elementary_report.html` or add an `index.html` redirect inside the container

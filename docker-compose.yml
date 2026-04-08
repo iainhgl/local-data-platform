@@ -30,13 +30,19 @@ services:
     restart: unless-stopped
 
   # Evidence — analytical reporting (all profiles)
+  # NOTE: The current Evidence template dependencies require Node 20+, so we run the dev server
+  # in a native Node 20 container from the mounted workspace instead of the older devenv image.
   # Story 2.11 completes Evidence project config and volume mounts
   evidence:
-    image: ghcr.io/evidence-dev/evidence:latest
+    image: node:20-bookworm
     platform: linux/arm64
     profiles: ["simple", "postgres", "lakehouse", "full"]
     ports:
       - "18010:3000"
+    volumes:
+      - ./:/evidence-workspace
+    working_dir: /evidence-workspace/evidence
+    command: sh -lc "npm install && npm run sources && npm run dev -- --host 0.0.0.0"
     restart: unless-stopped
 
   # dbt docs — generated documentation server (all profiles)
