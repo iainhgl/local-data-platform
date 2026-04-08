@@ -1,5 +1,10 @@
 # Deferred Work
 
+## Deferred from: code review of 2-9-elementary-observability-dashboard (2026-04-08)
+
+- `open-docs` target opens `http://localhost:18030/` (directory listing) not `/elementary_report.html` directly — minor UX issue; could update `open-docs` URL to `/elementary_report.html` or add an `index.html` redirect inside the container
+- No post-run validation that `edr_target/elementary_report.html` was generated — Makefile could add a `test -f edr_target/elementary_report.html` guard after `edr report`; consistent with project pattern of not validating outputs
+
 ## Deferred from: code review of 2-8-dbt-tests-dbt-expectations-and-source-freshness (2026-04-01)
 
 - `order_date` and `return_date` have no `not_null` or temporal range tests — FK columns guarded in this story but temporal keys remain uncovered across faker_orders and faker_returns; address when Silver model coverage is expanded
