@@ -24,6 +24,12 @@ data/*.json
 *.duckdb
 *.duckdb.wal
 
+# Evidence build artifacts
+evidence/node_modules/
+evidence/.evidence/
+evidence/.env
+evidence/*.core
+
 # dbt user config — machine-specific, not for version control
 .user.yml
 

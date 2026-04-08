@@ -61,7 +61,7 @@ development_status:
   2-8-dbt-tests-dbt-expectations-and-source-freshness: done
   2-9-elementary-observability-dashboard: done
   2-10-lightdash-bi-dashboard: backlog
-  2-11-evidence-analytical-reports: backlog
+  2-11-evidence-analytical-reports: done
   2-12-make-run-pipeline-and-make-open-docs-commands: done
   2-12b-silver-incremental-idempotency-fix: done
   2-13-dbt-documentation-and-column-lineage: backlog

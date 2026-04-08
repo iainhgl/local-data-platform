@@ -1,0 +1,4 @@
+name: local_duckdb
+type: duckdb
+options:
+  filename: ../../../dev.duckdb
