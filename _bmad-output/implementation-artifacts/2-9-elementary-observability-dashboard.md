@@ -1,6 +1,6 @@
 # Story 2.9: Elementary Observability Dashboard
 
-Status: done
+Status: ready-for-dev
 
 ## Story
 
@@ -125,8 +125,6 @@ so that data quality is visible as a live observability layer — not just a pas
 - [x] [Review][Defer] `elementary-data` unpinned in `requirements.txt` — pre-existing pattern across all project dependencies [`requirements.txt`] — deferred, pre-existing
 - [x] [Review][Defer] Tests use brittle hardcoded-indentation substring assertions — pre-existing test pattern in project [`tests/`] — deferred, pre-existing
 - [x] [Review][Defer] `python -m http.server` has no authentication — local dev tool; acceptable for project scope [`docker-compose.yml`] — deferred, pre-existing
-- [x] [Review][Defer] `open-docs` target opens `http://localhost:18030/` (directory listing) not `/elementary_report.html` directly — minor UX issue; user can click through directory listing; out of story scope [`Makefile`] — deferred, pre-existing
-- [x] [Review][Defer] No post-run validation that `edr_target/elementary_report.html` was generated after `edr report` completes — consistent with project pattern (`dbt run`/`dbt test` also produce no post-run file checks) [`Makefile`] — deferred, pre-existing
 
 ## Dev Notes
 
