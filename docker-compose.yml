@@ -30,19 +30,23 @@ services:
     restart: unless-stopped
 
   # Evidence — analytical reporting (all profiles)
-  # NOTE: The current Evidence template dependencies require Node 20+, so we run the dev server
-  # in a native Node 20 container from the mounted workspace instead of the older devenv image.
+  # NOTE: Evidence's build (DuckDB WASM bundling) hangs on linux/arm64 inside Docker.
+  # Solution: build is run on the macOS host via 'make build-evidence' (called by make run-pipeline),
+  # and Docker only serves the pre-built static output.
   # Story 2.11 completes Evidence project config and volume mounts
   evidence:
-    image: node:20-bookworm
+    image: python:3.11-slim
     platform: linux/arm64
     profiles: ["simple", "postgres", "lakehouse", "full"]
     ports:
       - "18010:3000"
     volumes:
       - ./:/evidence-workspace
-    working_dir: /evidence-workspace/evidence
-    command: sh -lc "npm install && npm run sources && npm run dev -- --host 0.0.0.0"
+    working_dir: /evidence-workspace
+    command: >-
+      sh -c "while [ ! -d evidence/.evidence/template/build ]; do
+      echo 'Evidence build not found, run: make build-evidence'; sleep 10;
+      done && python3 -m http.server 3000 --directory evidence/.evidence/template/build"
     restart: unless-stopped
 
   # dbt docs — generated documentation server (all profiles)

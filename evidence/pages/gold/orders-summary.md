@@ -15,7 +15,7 @@ select
     100.0 * sum(case when has_return then 1 else 0 end)
     / count(*), 1
   )                                                     as return_rate_pct
-from gold.orders_mart
+from orders_mart
 ```
 
 <BigValue data={orders_overview} value="total_orders" title="Total Orders" />
@@ -27,7 +27,7 @@ select
   category,
   count(*)          as order_count,
   sum(total_amount) as revenue
-from gold.orders_mart
+from orders_mart
 group by category
 order by revenue desc
 ```

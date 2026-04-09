@@ -2,6 +2,7 @@
   "name": "my-evidence-project",
   "version": "0.0.1",
   "scripts": {
+    "postinstall": "node scripts/patch-evidence.cjs",
     "build": "evidence build",
     "build:strict": "evidence build:strict",
     "dev": "evidence dev --open /",
