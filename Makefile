@@ -1,4 +1,4 @@
-.PHONY: help start stop run-pipeline open-docs install profiles init-duckdb
+.PHONY: help start stop run-pipeline build-evidence open-docs install profiles init-duckdb
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -17,7 +17,7 @@ init-duckdb: ## Initialise the local DuckDB file with required schemas
 stop: ## Stop all running services
 	@docker compose down
 
-run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr report
+run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr report → evidence build
 	@test -f .env || (echo "❌  .env not found. Create it first: cp .env.example .env" && exit 1)
 	@echo "▶  Running ingestion (file source)..."
 	@PYTHONPATH=. python ingest/dlt_file_source.py
@@ -29,8 +29,14 @@ run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr r
 	@dbt test
 	@echo "▶  Generating Elementary report..."
 	@mkdir -p edr_target
-	@edr report --profiles-dir . --profile local_data_platform --target elementary
+	@DBT_DUCKDB_PATH="$(CURDIR)/dev.duckdb" edr report --profiles-dir . --profile-target elementary
+	@$(MAKE) build-evidence
 	@echo "✔  Pipeline complete — run make open-docs to view dashboards"
+
+build-evidence: ## Build Evidence analytical reports (runs on host — DuckDB WASM build requires macOS)
+	@echo "▶  Building Evidence reports (host build)..."
+	@cd evidence && npm install && npm run sources && npm run build
+	@echo "✔  Evidence reports built — served at http://localhost:18010"
 
 open-docs: ## Open dashboards: Lightdash (18000) Evidence (18010) dbt docs (18020) Elementary (18030)
 	@echo "▶  Opening dashboards..."
