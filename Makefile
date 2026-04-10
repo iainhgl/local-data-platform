@@ -36,7 +36,7 @@ run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr r
 build-evidence: ## Build Evidence analytical reports (runs on host — DuckDB WASM build requires macOS)
 	@echo "▶  Building Evidence reports (host build)..."
 	@cd evidence && npm install && npm run sources && npm run build
-	@echo "✔  Evidence reports built — served at http://localhost:18010"
+	@echo "✔  Evidence reports built — run 'docker compose up' to serve at http://localhost:18010"
 
 open-docs: ## Open dashboards: Lightdash (18000) Evidence (18010) dbt docs (18020) Elementary (18030)
 	@echo "▶  Opening dashboards..."

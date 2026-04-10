@@ -9,8 +9,6 @@ select
   status,
   has_return,
   category,
-  first_name,
-  last_name,
   city,
   country,
   product_name

@@ -1,0 +1,15 @@
+semantic_models:
+  - name: customers
+    description: "Semantic model for customer dimension. References gold.dim_customers."
+    model: ref('dim_customers')
+    entities:
+      - name: customer
+        type: primary
+        expr: customer_id
+    dimensions:
+      - name: customer_city
+        type: categorical
+        expr: city
+      - name: customer_country
+        type: categorical
+        expr: country

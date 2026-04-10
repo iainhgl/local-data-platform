@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-25
-last_updated: 2026-04-08
+last_updated: 2026-04-10
 project: local-data-platform
 project_key: NOKEY
 tracking_system: file-system
@@ -57,7 +57,7 @@ development_status:
   2-4-silver-layer-dbt-models-with-medallion-structure: done
   2-5-quarantine-models-for-failed-record-capture: done
   2-6-gold-layer-facts-dimensions-and-marts: done
-  2-7-metricflow-semantic-layer: backlog
+  2-7-metricflow-semantic-layer: done
   2-8-dbt-tests-dbt-expectations-and-source-freshness: done
   2-9-elementary-observability-dashboard: done
   2-10-lightdash-bi-dashboard: backlog  # deferred to Epic 3 — Lightdash upstream does not yet support local DuckDB files; see 3-4-lightdash-bi-dashboard

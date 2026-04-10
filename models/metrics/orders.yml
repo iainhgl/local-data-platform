@@ -1,0 +1,49 @@
+semantic_models:
+  - name: orders
+    defaults:
+      agg_time_dimension: order_date
+    description: "Semantic model for order facts. References gold.fct_orders."
+    model: ref('fct_orders')
+    entities:
+      - name: order
+        type: primary
+        expr: order_id
+      - name: customer
+        type: foreign
+        expr: customer_id
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+        expr: order_date
+      - name: order_status
+        type: categorical
+        expr: status
+      - name: has_return
+        type: categorical
+        expr: has_return
+    measures:
+      - name: order_count
+        agg: count_distinct
+        expr: order_id
+        agg_time_dimension: order_date
+      - name: revenue
+        agg: sum
+        expr: total_amount
+        agg_time_dimension: order_date
+
+metrics:
+  - name: order_count
+    label: "Order Count"
+    description: "Total number of distinct orders placed."
+    type: simple
+    type_params:
+      measure: order_count
+
+  - name: revenue
+    label: "Revenue"
+    description: "Total revenue from all orders (sum of total_amount)."
+    type: simple
+    type_params:
+      measure: revenue
