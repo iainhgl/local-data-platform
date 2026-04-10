@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-25
-last_updated: 2026-04-10  # 2-13 done
+last_updated: 2026-04-10  # 2-14 done
 project: local-data-platform
 project_key: NOKEY
 tracking_system: file-system
@@ -65,7 +65,7 @@ development_status:
   2-12-make-run-pipeline-and-make-open-docs-commands: done
   2-12b-silver-incremental-idempotency-fix: done
   2-13-dbt-documentation-and-column-lineage: done
-  2-14-cron-schedule-and-readme: backlog
+  2-14-cron-schedule-and-readme: done
   epic-2-retrospective: optional
 
   # Epic 3: Postgres Profile — Server Warehouse & Governance

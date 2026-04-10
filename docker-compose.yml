@@ -65,6 +65,35 @@ services:
     command: sh -c "mkdir -p /workspace/target && python -m http.server 8080 --directory /workspace/target"
     restart: unless-stopped
 
+  # cron-scheduler — runs the pipeline on a schedule (simple profile only)
+  # Story 2.14 wires this service. Evidence build and Elementary edr report run on host only.
+  # Full profile uses Airflow (Story 5.1) for scheduling.
+  cron-scheduler:
+    build:
+      context: .
+      dockerfile: docker/scheduler/Dockerfile
+    platform: linux/arm64
+    profiles: ["simple"]
+    volumes:
+      - ./:/workspace
+    environment:
+      - COMPOSE_PROFILES=${COMPOSE_PROFILES:-simple}
+      - DBT_DUCKDB_PATH=/workspace/dev.duckdb
+      - FAKER_ROWS=${FAKER_ROWS:-1000}
+      - FAKER_OUTPUT_DIR=${FAKER_OUTPUT_DIR:-data}
+      - API_BASE_URL=${API_BASE_URL:-https://jsonplaceholder.typicode.com}
+      - CRON_INTERVAL=${CRON_INTERVAL:-3600}
+    command: >-
+      sh -c "echo '▶  Scheduler starting - interval: ${CRON_INTERVAL:-3600}s' &&
+      if [ \"${CRON_INTERVAL:-3600}\" = \"0\" ]; then
+      echo 'ℹ  Scheduler disabled because CRON_INTERVAL=0';
+      sleep infinity;
+      else
+      /run_pipeline.sh &&
+      while true; do sleep ${CRON_INTERVAL:-3600}; /run_pipeline.sh; done;
+      fi"
+    restart: unless-stopped
+
   # Elementary — data observability dashboard (all profiles)
   # Story 2.9 completes Elementary install and edr report config
   elementary:

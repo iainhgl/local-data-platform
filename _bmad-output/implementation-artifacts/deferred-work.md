@@ -1,5 +1,12 @@
 # Deferred Work
 
+## Deferred from: code review of 2-14-cron-schedule-and-readme (2026-04-10)
+
+- DuckDB write-lock race condition: if host `make run-pipeline` runs concurrently with the cron-scheduler container, the second opener receives `IOException: Could not set lock on file`; pre-existing for all concurrent dbt access; documented in story Dev Notes; address if parallel execution is required
+- Pipeline fires immediately on `cron-scheduler` container start before the first `CRON_INTERVAL` elapses — intentional UX choice for a learning tool; revisit if users find the immediate first run unexpected
+- `restart: unless-stopped` + `set -e` in `run_pipeline.sh` causes tight crash-restart loop on any pipeline failure — pre-existing pattern shared by Elementary and Evidence services; add `restart: on-failure` with `max_retries` if restart storms become a problem in practice
+- No version pins in `docker/scheduler/Dockerfile` — pre-existing project convention; requirements.txt also unpinned; pin once the image is considered stable for a production-like workflow
+
 ## Deferred from: code review of 2-13-dbt-documentation-and-column-lineage (2026-04-10)
 
 - `run-pipeline` does not assert Docker services are running before opening docs — pre-existing UX pattern; `make start` is the documented prerequisite; no change required unless README is updated to add an explicit service-up step
