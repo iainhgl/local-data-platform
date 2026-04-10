@@ -33,7 +33,7 @@ A self-contained, profile-switchable local data platform for learning modern dat
 | 2.11 | Evidence analytical reports | ✅ done |
 | 2.12 | make run-pipeline and make open-docs commands | ✅ done |
 | 2.12b | Silver incremental idempotency fix | ✅ done |
-| 2.13 | dbt documentation and column lineage | backlog |
+| 2.13 | dbt documentation and column lineage | done |
 | 2.14 | Cron schedule and README | backlog |
 | **Epic 3** | **Postgres Profile — Server Warehouse & Governance** | **backlog** |
 | 3.1 | Postgres profile Docker Compose and dbt adapter | backlog |
@@ -61,7 +61,7 @@ All services use a high-base port range (18000+) with 10-unit increments to avoi
 |---|---|---|---|
 | Lightdash (BI dashboard) | 18000 | all | Stub — DuckDB adapter pending upstream; full support in Story 3.4 (Postgres) |
 | Evidence (analytical reports) | 18010 | all | Active |
-| dbt docs | 18020 | all | Stub — configured in Story 2.13 |
+| dbt docs | 18020 | all | Active |
 | Elementary (observability) | 18030 | all | Active |
 | Postgres (data warehouse) | 18040 | postgres, full | Stub — used from Story 2 onwards |
 | MinIO console | 18050 | lakehouse, full | Stub — configured in Story 4.1 |
