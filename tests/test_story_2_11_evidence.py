@@ -40,7 +40,7 @@ class Story211EvidenceTests(unittest.TestCase):
         orders_text = orders_summary.read_text()
         self.assertIn("title: Gold Layer - Orders Summary", orders_text)
         self.assertIn("Source: `gold.orders_mart`", orders_text)
-        self.assertIn("from gold.orders_mart", orders_text)
+        self.assertIn("from orders_mart", orders_text)
         self.assertIn("<BigValue data={orders_overview}", orders_text)
         self.assertIn("<DataTable data={orders_by_category} />", orders_text)
 
@@ -49,14 +49,15 @@ class Story211EvidenceTests(unittest.TestCase):
         gitignore = (PROJECT_ROOT / ".gitignore").read_text()
 
         self.assertIn("evidence:", docker_compose)
-        self.assertIn("image: node:20-bookworm", docker_compose)
+        self.assertIn("image: node:20-slim", docker_compose)
         self.assertIn("platform: linux/arm64", docker_compose)
         self.assertIn('- ./:/evidence-workspace', docker_compose)
-        self.assertIn("working_dir: /evidence-workspace/evidence", docker_compose)
+        self.assertIn("working_dir: /evidence-workspace", docker_compose)
         self.assertIn(
-            'command: sh -lc "npm install && npm run sources && npm run dev -- --host 0.0.0.0"',
+            "Evidence build not found, run: make build-evidence",
             docker_compose,
         )
+        self.assertIn("npx serve -s evidence/.evidence/template/build -l 3000", docker_compose)
 
         self.assertIn("evidence/node_modules/", gitignore)
         self.assertIn("evidence/.evidence/", gitignore)

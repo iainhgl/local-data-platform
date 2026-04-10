@@ -45,7 +45,7 @@ class MakefileTargetsTests(unittest.TestCase):
         self.assertIn("@dbt test", block)
         self.assertIn('@echo "▶  Generating Elementary report..."', block)
         self.assertIn(
-            "@edr report --profiles-dir . --profile local_data_platform --target elementary",
+            '@DBT_DUCKDB_PATH="$(CURDIR)/dev.duckdb" edr report --profiles-dir . --profile-target elementary',
             block,
         )
         self.assertIn(

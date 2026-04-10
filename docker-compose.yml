@@ -33,9 +33,11 @@ services:
   # NOTE: Evidence's build (DuckDB WASM bundling) hangs on linux/arm64 inside Docker.
   # Solution: build is run on the macOS host via 'make build-evidence' (called by make run-pipeline),
   # and Docker only serves the pre-built static output.
+  # Uses node:20-slim so npx serve is available — sets correct MIME types (incl. application/wasm)
+  # and handles SPA routing via the -s flag.
   # Story 2.11 completes Evidence project config and volume mounts
   evidence:
-    image: python:3.11-slim
+    image: node:20-slim
     platform: linux/arm64
     profiles: ["simple", "postgres", "lakehouse", "full"]
     ports:
@@ -44,9 +46,9 @@ services:
       - ./:/evidence-workspace
     working_dir: /evidence-workspace
     command: >-
-      sh -c "while [ ! -d evidence/.evidence/template/build ]; do
+      sh -c "while [ ! -f evidence/.evidence/template/build/index.html ]; do
       echo 'Evidence build not found, run: make build-evidence'; sleep 10;
-      done && python3 -m http.server 3000 --directory evidence/.evidence/template/build"
+      done && npx serve -s evidence/.evidence/template/build -l 3000"
     restart: unless-stopped
 
   # dbt docs — generated documentation server (all profiles)
