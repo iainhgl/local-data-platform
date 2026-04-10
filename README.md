@@ -4,12 +4,70 @@ A self-contained, profile-switchable local data platform for learning modern dat
 
 ## Quick Start
 
-<!-- Full quick-start instructions added in Story 2.14 -->
+1. **Clone the repo:**
+   ```bash
+   git clone https://github.com/iainhgl/local-data-platform.git
+   cd local-data-platform
+   ```
+2. **Copy environment config:**
+   ```bash
+   cp .env.example .env
+   ```
+3. **Start services** (simple profile by default):
+   ```bash
+   make start
+   ```
+4. **Run the pipeline** (first run; subsequent runs are scheduled automatically):
+   ```bash
+   make run-pipeline
+   ```
+5. **Open dashboards:**
+   ```bash
+   make open-docs
+   ```
+
+> **Prerequisites:** Docker Desktop, Python 3.11+, dbt-duckdb, dlt - see [Hardware Requirements](#hardware-requirements) below.
+
+## Profiles
+
+Set `COMPOSE_PROFILES` in `.env` to switch profiles. All profiles share the same dbt models, ingestion scripts, and `schema.yml`.
+
+| Profile | Query Engine | Use Case |
+|---|---|---|
+| `simple` | DuckDB (file-based) | Local learning - minimal footprint, no auth |
+| `postgres` | Postgres (Docker) | Server warehouse, three-role RBAC, PII masking |
+| `lakehouse` | Trino + MinIO + Iceberg | Open table formats, schema evolution, large datasets |
+| `full` | All of the above | Enterprise stack - Airflow, Keycloak SSO, Superset, MCP |
+
+See [docs/profile-guide.md](docs/profile-guide.md) for per-profile hardware and service details.
 
 ## Hardware Requirements
 
 - **Minimum (simple / postgres profiles):** 8 GB RAM
 - **Recommended (lakehouse / full profiles):** 16 GB RAM
+
+## Cloud Equivalence
+
+Every component maps to a cloud/SaaS equivalent. See [docs/cloud-equivalence.md](docs/cloud-equivalence.md) for the full table.
+
+| Local | Cloud Equivalent |
+|---|---|
+| DuckDB | BigQuery Serverless / Redshift Serverless |
+| dlt | Fivetran / Airbyte |
+| dbt Core | dbt Cloud |
+| MinIO | Amazon S3 / GCS / Azure Blob |
+| Trino | Amazon Athena / BigQuery |
+| Airflow | Amazon MWAA / Cloud Composer (GCP) |
+| Keycloak | Amazon Cognito / Auth0 |
+| Prometheus + Grafana | CloudWatch / Datadog |
+| Superset | Looker / Tableau |
+| Elementary | Monte Carlo / Great Expectations Cloud |
+| Evidence | Observable / Hex |
+| OpenMetadata | Google Dataplex / Microsoft Purview |
+
+## WSL2 (Windows)
+
+The platform runs on WSL2 (Ubuntu 22.04+). Set Docker Desktop -> Settings -> Resources -> "Use WSL 2 based engine". See [docs/wsl2.md](docs/wsl2.md) for full setup and known limitations.
 
 ## Sprint Status
 
@@ -34,7 +92,7 @@ A self-contained, profile-switchable local data platform for learning modern dat
 | 2.12 | make run-pipeline and make open-docs commands | ✅ done |
 | 2.12b | Silver incremental idempotency fix | ✅ done |
 | 2.13 | dbt documentation and column lineage | done |
-| 2.14 | Cron schedule and README | backlog |
+| 2.14 | Cron schedule and README | done |
 | **Epic 3** | **Postgres Profile — Server Warehouse & Governance** | **backlog** |
 | 3.1 | Postgres profile Docker Compose and dbt adapter | backlog |
 | 3.2 | Three-role RBAC and PII column masking | backlog |

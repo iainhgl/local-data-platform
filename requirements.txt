@@ -1,4 +1,5 @@
 dlt
 faker
 pandas
+requests
 elementary-data
