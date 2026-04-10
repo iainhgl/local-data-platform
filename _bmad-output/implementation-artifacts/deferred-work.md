@@ -1,5 +1,12 @@
 # Deferred Work
 
+## Deferred from: code review of 2-13-dbt-documentation-and-column-lineage (2026-04-10)
+
+- `run-pipeline` does not assert Docker services are running before opening docs — pre-existing UX pattern; `make start` is the documented prerequisite; no change required unless README is updated to add an explicit service-up step
+- Port `18020` (and all other services) bind on all host interfaces (`0.0.0.0`) — pre-existing across all services; local dev tool by design; restrict bind address if multi-user or CI network exposure becomes a concern
+- DuckDB exclusive write-lock causes failures if `make run-pipeline` runs in parallel — pre-existing across all dbt commands; no serialisation exists in any Makefile target; address if parallel CI pipelines are introduced
+- No atomic swap for `target/catalog.json` on pipeline re-run — partially written file briefly served by the dbt-docs container while pipeline regenerates; pre-existing pattern shared by Elementary and Evidence services
+
 ## Deferred from: code review of 2-11-evidence-analytical-reports (2026-04-08)
 
 - Dual Evidence plugin config files (`evidence.plugins.yaml` + `evidence.config.yaml`) with different key formats — scaffold generates `evidence.config.yaml` (newer `datasources:` format); investigate whether `evidence.plugins.yaml` is still read by Evidence v40 or can be removed

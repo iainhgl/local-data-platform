@@ -17,7 +17,7 @@ init-duckdb: ## Initialise the local DuckDB file with required schemas
 stop: ## Stop all running services
 	@docker compose down
 
-run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr report → evidence build
+run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → dbt docs generate → edr report → evidence build
 	@test -f .env || (echo "❌  .env not found. Create it first: cp .env.example .env" && exit 1)
 	@echo "▶  Running ingestion (file source)..."
 	@PYTHONPATH=. python ingest/dlt_file_source.py
@@ -27,6 +27,8 @@ run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → edr r
 	@dbt run
 	@echo "▶  Running dbt test..."
 	@dbt test
+	@echo "▶  Generating dbt docs..."
+	@dbt docs generate
 	@echo "▶  Generating Elementary report..."
 	@mkdir -p edr_target
 	@DBT_DUCKDB_PATH="$(CURDIR)/dev.duckdb" edr report --profiles-dir . --profile-target elementary

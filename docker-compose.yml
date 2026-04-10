@@ -52,7 +52,7 @@ services:
     restart: unless-stopped
 
   # dbt docs — generated documentation server (all profiles)
-  # Served via 'dbt docs serve --port 18020' or 'make open-docs'
+  # Served via python -m http.server from ./target (populated by 'dbt docs generate' in make run-pipeline)
   # Story 2.13 completes dbt documentation and serving setup
   dbt-docs:
     image: python:3.11-slim
@@ -60,7 +60,9 @@ services:
     profiles: ["simple", "postgres", "lakehouse", "full"]
     ports:
       - "18020:8080"
-    command: tail -f /dev/null
+    volumes:
+      - "./target:/workspace/target"
+    command: sh -c "mkdir -p /workspace/target && python -m http.server 8080 --directory /workspace/target"
     restart: unless-stopped
 
   # Elementary — data observability dashboard (all profiles)
