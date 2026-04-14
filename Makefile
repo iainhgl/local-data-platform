@@ -17,23 +17,29 @@ init-duckdb: ## Initialise the local DuckDB file with required schemas
 stop: ## Stop all running services
 	@docker compose down
 
-run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → dbt docs generate → edr report → evidence build
+run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → dbt docs generate (edr + Evidence: simple profile only)
 	@test -f .env || (echo "❌  .env not found. Create it first: cp .env.example .env" && exit 1)
-	@echo "▶  Running ingestion (file source)..."
-	@PYTHONPATH=. python ingest/dlt_file_source.py
-	@echo "▶  Running ingestion (API source)..."
-	@PYTHONPATH=. python ingest/dlt_api_source.py
-	@echo "▶  Running dbt run..."
-	@dbt run
-	@echo "▶  Running dbt test..."
-	@dbt test
-	@echo "▶  Generating dbt docs..."
-	@dbt docs generate
-	@echo "▶  Generating Elementary report..."
-	@mkdir -p edr_target
-	@DBT_DUCKDB_PATH="$(CURDIR)/dev.duckdb" edr report --profiles-dir . --profile-target elementary
-	@$(MAKE) build-evidence
-	@echo "✔  Pipeline complete — run make open-docs to view dashboards"
+	@set -a; . ./.env; set +a; \
+	echo "▶  Running pipeline for profile: $$COMPOSE_PROFILES"; \
+	echo "▶  Running ingestion (file source)..." && \
+	PYTHONPATH=. python ingest/dlt_file_source.py && \
+	echo "▶  Running ingestion (API source)..." && \
+	PYTHONPATH=. python ingest/dlt_api_source.py && \
+	echo "▶  Running dbt run..." && \
+	dbt run && \
+	echo "▶  Running dbt test..." && \
+	dbt test && \
+	echo "▶  Generating dbt docs..." && \
+	dbt docs generate && \
+	if [ "$$COMPOSE_PROFILES" = "simple" ]; then \
+		echo "▶  Generating Elementary report..."; \
+		mkdir -p edr_target; \
+		DBT_DUCKDB_PATH="$$(pwd)/dev.duckdb" edr report --profiles-dir . --profile-target elementary && \
+		$(MAKE) build-evidence; \
+	else \
+		echo "ℹ  Elementary (edr) and Evidence skipped for profile: $$COMPOSE_PROFILES (DuckDB-only components)"; \
+	fi && \
+	echo "✔  Pipeline complete — run make open-docs to view dashboards"
 
 build-evidence: ## Build Evidence analytical reports (runs on host — DuckDB WASM build requires macOS)
 	@echo "▶  Building Evidence reports (host build)..."

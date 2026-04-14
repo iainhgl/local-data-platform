@@ -17,6 +17,7 @@ import duckdb
 
 DATA_DIR = Path(os.environ.get("FAKER_OUTPUT_DIR", "data"))
 DUCKDB_PATH = os.environ.get("DBT_DUCKDB_PATH", "dev.duckdb")
+COMPOSE_PROFILES = os.environ.get("COMPOSE_PROFILES", "simple")
 
 ENTITIES = {
     "customers": "customer_id",
@@ -43,19 +44,58 @@ def faker_file_source():
         yield make_resource(entity, pk)
 
 
+def _get_destination():
+    if COMPOSE_PROFILES == "postgres":
+        conn = (
+            f"postgresql://{os.environ.get('POSTGRES_USER', 'dbt')}:"
+            f"{os.environ.get('POSTGRES_PASSWORD', '')}@"
+            f"{os.environ.get('POSTGRES_HOST', 'localhost')}:"
+            f"{os.environ.get('POSTGRES_PORT', '18040')}/"
+            f"{os.environ.get('POSTGRES_DB', 'local_data_platform')}"
+        )
+        return dlt.destinations.postgres(conn)
+    return dlt.destinations.duckdb(DUCKDB_PATH)
+
+
+def _verify_counts():
+    if COMPOSE_PROFILES == "postgres":
+        import psycopg2
+        conn = psycopg2.connect(
+            host=os.environ.get("POSTGRES_HOST", "localhost"),
+            port=int(os.environ.get("POSTGRES_PORT", "18040")),
+            user=os.environ.get("POSTGRES_USER", "dbt"),
+            password=os.environ.get("POSTGRES_PASSWORD", ""),
+            dbname=os.environ.get("POSTGRES_DB", "local_data_platform"),
+        )
+        try:
+            with conn.cursor() as cur:
+                for entity in ENTITIES:
+                    cur.execute(f"SELECT COUNT(*) FROM bronze.{entity}")
+                    count = cur.fetchone()[0]
+                    print(f"✓ {entity}: {count} rows")
+        finally:
+            conn.close()
+        return
+
+    conn = duckdb.connect(DUCKDB_PATH, read_only=True)
+    try:
+        for entity in ENTITIES:
+            count = conn.execute(f"SELECT COUNT(*) FROM bronze.{entity}").fetchone()[0]
+            print(f"✓ {entity}: {count} rows")
+    finally:
+        conn.close()
+
+
 def main():
     try:
         pipeline = dlt.pipeline(
             pipeline_name="faker_file",
-            destination=dlt.destinations.duckdb(DUCKDB_PATH),
+            destination=_get_destination(),
             dataset_name="bronze",
         )
         load_info = pipeline.run(faker_file_source())
-        conn = duckdb.connect(DUCKDB_PATH, read_only=True)
-        for entity in ENTITIES:
-            count = conn.execute(f"SELECT COUNT(*) FROM bronze.{entity}").fetchone()[0]
-            print(f"✓ {entity}: {count} rows")
-        conn.close()
+        load_info.raise_on_failed_jobs()
+        _verify_counts()
     except Exception as e:
         print(json.dumps({"level": "ERROR", "pipeline": "faker_file", "error": str(e)}))
         sys.exit(1)

@@ -82,7 +82,7 @@ models:
         meta: {pii: false}
       - name: unit_price
         description: "Unit price from the rejected source record."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
       - name: sku
         description: "Stock keeping unit code from the rejected source record."
@@ -142,11 +142,11 @@ models:
         meta: {pii: false}
       - name: unit_price
         description: "Unit price captured on the rejected order."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
       - name: total_amount
         description: "Extended order amount from the rejected source record."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
       - name: status
         description: "Order lifecycle status from the rejected source record."
@@ -206,7 +206,7 @@ models:
         meta: {pii: false}
       - name: refund_amount
         description: "Refund amount from the rejected source record."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
       - name: created_at
         description: "Timestamp when the Bronze return record was created."

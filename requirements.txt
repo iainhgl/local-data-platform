@@ -3,3 +3,4 @@ faker
 pandas
 requests
 elementary-data
+psycopg2-binary
