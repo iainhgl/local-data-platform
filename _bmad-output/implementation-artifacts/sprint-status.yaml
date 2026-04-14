@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-25
-last_updated: 2026-04-10  # 2-14 done
+last_updated: 2026-04-10  # epic-2 done
 project: local-data-platform
 project_key: NOKEY
 tracking_system: file-system
@@ -50,7 +50,7 @@ development_status:
   epic-1-retrospective: optional
 
   # Epic 2: Simple Profile — First Working Pipeline (MVP)
-  epic-2: in-progress
+  epic-2: done
   2-1-faker-synthetic-data-generator: done
   2-2-dlt-file-source-ingestion-to-bronze: done
   2-3-dlt-api-source-ingestion-to-bronze: done
