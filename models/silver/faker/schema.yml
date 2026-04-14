@@ -86,7 +86,7 @@ models:
               values: ['Electronics', 'Clothing', 'Home', 'Books', 'Sports', 'Toys']
       - name: unit_price
         description: "Unit price in USD."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
@@ -156,7 +156,7 @@ models:
               strictly: false
       - name: unit_price
         description: "Unit price captured at order time. Allows zero — promotional/free-item orders are valid; contrast with faker_products.unit_price which is strictly positive."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
@@ -164,7 +164,7 @@ models:
               strictly: false  # intentional: orders may have $0 unit price (promotions); faker_products.unit_price uses strictly: true
       - name: total_amount
         description: "Extended order amount."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
@@ -236,7 +236,7 @@ models:
               values: ['defective', 'wrong_item', 'not_as_described', 'changed_mind', 'damaged_in_transit']
       - name: refund_amount
         description: "Refund amount issued for the return. Bronze source documents this as 50-100% of original total_amount; test uses strictly: false as a defensive floor guard rather than enforcing the upper-bound contract."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
         tests:
           - dbt_expectations.expect_column_values_to_be_between:

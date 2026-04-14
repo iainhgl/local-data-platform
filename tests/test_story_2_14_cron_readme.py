@@ -39,7 +39,7 @@ class Story214CronScheduleAndReadmeTests(unittest.TestCase):
         self.assertIn('profiles: ["simple", "postgres", "lakehouse", "full"]', compose)
         self.assertIn("- ./:/workspace", compose)
         self.assertIn("- CRON_INTERVAL=${CRON_INTERVAL:-3600}", compose)
-        self.assertIn("- DBT_DUCKDB_PATH=/workspace/${DBT_DUCKDB_PATH:-dev.duckdb}", compose)
+        self.assertIn("- DBT_DUCKDB_PATH=/workspace/dev.duckdb", compose)
         self.assertIn("Scheduler starting", compose)
         self.assertIn("/run_pipeline.sh", compose)
         self.assertIn('if [ \\"${CRON_INTERVAL:-3600}\\" = \\"0\\" ]', compose)

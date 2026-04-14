@@ -1,5 +1,17 @@
 # Deferred Work
 
+## Deferred from: code review of 3-1-postgres-profile-docker-compose-and-dbt-adapter (2026-04-14)
+
+- `ALTER DEFAULT PRIVILEGES` scope limited to init-script executor role — correct today (dlt/dbt run as `POSTGRES_USER`/dbt); latent RBAC gap if future roles diverge; revisit in Story 3.2
+- SQL identifier interpolation in `_verify_counts()` — f-strings used for table names against psycopg2; low risk while ENTITIES/TABLES are constants but should use `psycopg2.sql.Identifier`; pre-existing pattern also noted in Story 2.3 deferred work
+- `COMPOSE_PROFILES` read at module-level import time — makes postgres branch untestable without process isolation; runtime behavior correct via Makefile; address when ingest scripts are refactored
+- No runtime integration tests — AC 1/2 are behavioral but all tests are structural (file-content assertions); acceptable for local dev tool, revisit when container-level CI is added
+- `make start` calls `init-duckdb` unconditionally regardless of profile — pre-existing issue; `init-duckdb` targets DuckDB and may misbehave on `postgres` profile; address when `start` target is made profile-aware
+- `lakehouse` profile falls into `run-pipeline` `else` branch with DuckDB-specific skip message — misleading for Trino; fix when lakehouse profile is implemented in Epic 4
+- `_verify_counts` asymmetric signatures between `dlt_file_source.py` (no args) and `dlt_api_source.py` (duckdb_path arg) — minor inconsistency; fix when ingest scripts are refactored holistically
+- Empty `POSTGRES_PASSWORD` default in `_get_destination()` emits no warning — acceptable for local dev; `.env.example` documents intended value
+- Test backslash continuation assertion fragility in `test_story_3_1_postgres_profile.py` — tests Makefile formatting, not behavior; low impact
+
 ## Deferred from: code review of 2-14-cron-schedule-and-readme (2026-04-10)
 
 - DuckDB write-lock race condition: if host `make run-pipeline` runs concurrently with the cron-scheduler container, the second opener receives `IOException: Could not set lock on file`; pre-existing for all concurrent dbt access; documented in story Dev Notes; address if parallel execution is required

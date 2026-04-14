@@ -38,11 +38,11 @@ models:
         meta: {pii: false}
       - name: unit_price
         description: "Unit price captured at order time."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
       - name: total_amount
         description: "Extended order amount."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
       - name: status
         description: "Current order lifecycle status."
@@ -66,7 +66,7 @@ models:
         meta: {pii: false}
       - name: refund_amount
         description: "Refund amount issued for the return, if present."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
       - name: _dlt_load_id
         description: "dlt load batch identifier inherited from the Silver orders model."

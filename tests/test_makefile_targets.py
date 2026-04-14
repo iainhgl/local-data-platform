@@ -35,23 +35,22 @@ class MakefileTargetsTests(unittest.TestCase):
             block,
         )
         self.assertNotIn("faker_generator.py", block)
-        self.assertIn('@echo "▶  Running ingestion (file source)..."', block)
-        self.assertIn("@PYTHONPATH=. python ingest/dlt_file_source.py", block)
-        self.assertIn('@echo "▶  Running ingestion (API source)..."', block)
-        self.assertIn("@PYTHONPATH=. python ingest/dlt_api_source.py", block)
-        self.assertIn('@echo "▶  Running dbt run..."', block)
-        self.assertIn("@dbt run", block)
-        self.assertIn('@echo "▶  Running dbt test..."', block)
-        self.assertIn("@dbt test", block)
-        self.assertIn('@echo "▶  Generating Elementary report..."', block)
-        self.assertIn(
-            '@DBT_DUCKDB_PATH="$(CURDIR)/dev.duckdb" edr report --profiles-dir . --profile-target elementary',
-            block,
-        )
-        self.assertIn(
-            '@echo "✔  Pipeline complete — run make open-docs to view dashboards"',
-            block,
-        )
+        self.assertIn("set -a; . ./.env; set +a;", block)
+        self.assertIn('echo "▶  Running ingestion (file source)..."', block)
+        self.assertIn("PYTHONPATH=. python ingest/dlt_file_source.py", block)
+        self.assertIn('echo "▶  Running ingestion (API source)..."', block)
+        self.assertIn("PYTHONPATH=. python ingest/dlt_api_source.py", block)
+        self.assertIn('echo "▶  Running dbt run..."', block)
+        self.assertIn("dbt run", block)
+        self.assertIn('echo "▶  Running dbt test..."', block)
+        self.assertIn("dbt test", block)
+        self.assertIn('echo "▶  Generating dbt docs..."', block)
+        self.assertIn('if [ "$$COMPOSE_PROFILES" = "simple" ]; then', block)
+        self.assertIn('echo "▶  Generating Elementary report..."', block)
+        self.assertIn('DBT_DUCKDB_PATH="$$(pwd)/dev.duckdb" edr report --profiles-dir . --profile-target elementary', block)
+        self.assertIn("$(MAKE) build-evidence", block)
+        self.assertIn("Elementary (edr) and Evidence skipped for profile", block)
+        self.assertIn('echo "✔  Pipeline complete — run make open-docs to view dashboards"', block)
 
     def test_open_docs_target_lists_all_dashboards_and_urls(self):
         block = _target_block("open-docs")
@@ -86,6 +85,7 @@ class MakefileTargetsTests(unittest.TestCase):
 
         self.assertIn("run-pipeline", result.stdout)
         self.assertIn("Run full pipeline: ingestion", result.stdout)
+        self.assertIn("simple profile only", result.stdout)
         self.assertIn("open-docs", result.stdout)
         self.assertIn("Open dashboards: Lightdash (18000)", result.stdout)
 

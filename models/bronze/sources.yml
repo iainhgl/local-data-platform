@@ -77,7 +77,7 @@ sources:
             meta: {pii: false}
           - name: unit_price
             description: "Price per unit in USD"
-            data_type: double
+            data_type: double precision
             meta: {pii: false}
           - name: sku
             description: "Stock keeping unit code"
@@ -121,11 +121,11 @@ sources:
             meta: {pii: false}
           - name: unit_price
             description: "Unit price at time of order"
-            data_type: double
+            data_type: double precision
             meta: {pii: false}
           - name: total_amount
             description: "quantity x unit_price"
-            data_type: double
+            data_type: double precision
             meta: {pii: false}
           - name: status
             description: "Order status: pending, shipped, delivered, cancelled, returned"
@@ -169,7 +169,7 @@ sources:
             meta: {pii: false}
           - name: refund_amount
             description: "Refund amount in USD (50-100% of original total_amount)"
-            data_type: double
+            data_type: double precision
             meta: {pii: false}
           - name: created_at
             description: "Record creation timestamp"

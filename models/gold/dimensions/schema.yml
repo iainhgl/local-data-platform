@@ -89,7 +89,7 @@ models:
         meta: {pii: false}
       - name: unit_price
         description: "Unit price in USD."
-        data_type: double
+        data_type: double precision
         meta: {pii: false}
       - name: sku
         description: "Stock keeping unit code."
