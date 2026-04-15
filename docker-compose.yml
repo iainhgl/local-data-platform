@@ -121,6 +121,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./docker/init/postgres_init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      - ./docker/init/postgres_masking.sql:/scripts/postgres_masking.sql:ro
     restart: unless-stopped
 
   # MinIO — object storage (lakehouse, full profiles)
