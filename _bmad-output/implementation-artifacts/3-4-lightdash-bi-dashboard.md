@@ -1,6 +1,6 @@
 # Story 3.4: Lightdash BI Dashboard
 
-Status: ready-for-dev
+Status: in-progress
 
 ## Story
 
@@ -24,13 +24,13 @@ so that I can browse metrics and dimensions via a dbt-native BI interface withou
 
 ## Tasks / Subtasks
 
-- [ ] Task 0: Create story branch (AC: all)
-  - [ ] `git checkout -b story/3-4-lightdash-bi-dashboard`
-  - [ ] Confirm working tree is clean
+- [x] Task 0: Create story branch (AC: all)
+  - [x] `git checkout -b story/3-4-lightdash-bi-dashboard`
+  - [x] Confirm working tree is clean
 
-- [ ] Task 1: Update docker-compose.yml lightdash service (AC: 1, 2)
-  - [ ] Add `volumes: - ./:/workspace` to the `lightdash` service (mounts dbt project inside container)
-  - [ ] Add warehouse env var overrides for Docker internal networking:
+- [x] Task 1: Update docker-compose.yml lightdash service (AC: 1, 2)
+  - [x] Add `volumes: - ./:/workspace` to the `lightdash` service (mounts dbt project inside container)
+  - [x] Add warehouse env var overrides for Docker internal networking:
     ```yaml
     - POSTGRES_HOST=postgres
     - POSTGRES_PORT=5432
@@ -38,12 +38,12 @@ so that I can browse metrics and dimensions via a dbt-native BI interface withou
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     - POSTGRES_DB=${POSTGRES_DB}
     ```
-  - [ ] Confirm existing `PGHOST=lightdash-db` / `PG*` vars remain unchanged (they are for the internal metadata DB, NOT the data warehouse)
-  - [ ] Add `depends_on` entry for `postgres` service (note: this will cause Compose to error if Lightdash is started without the postgres profile — acceptable, as Lightdash only has data on the postgres/full profiles)
-  - [ ] VERIFY: `docker compose --profile postgres config` shows the updated lightdash service correctly
+  - [x] Confirm existing `PGHOST=lightdash-db` / `PG*` vars remain unchanged (they are for the internal metadata DB, NOT the data warehouse)
+  - [x] Add `depends_on` entry for `postgres` service (note: this will cause Compose to error if Lightdash is started without the postgres profile — acceptable, as Lightdash only has data on the postgres/full profiles)
+  - [x] VERIFY: `docker compose --profile postgres config` shows the updated lightdash service correctly
 
-- [ ] Task 2: Create `lightdash.config.yaml` in the project root (AC: 1, 2)
-  - [ ] Create `lightdash.config.yaml` at the repo root with the dbt project connection:
+- [x] Task 2: Create `lightdash.config.yaml` in the project root (AC: 1, 2)
+  - [x] Create `lightdash.config.yaml` at the repo root with the dbt project connection:
     ```yaml
     version: '1.0'
     projects:
@@ -56,28 +56,28 @@ so that I can browse metrics and dimensions via a dbt-native BI interface withou
           profile: local_data_platform
           target: postgres
     ```
-  - [ ] VERIFY: File is at the repo root (same level as `dbt_project.yml`)
-  - [ ] VERIFY: `project_dir` and `profiles_dir` match the volume mount path (`/workspace`)
-  - [ ] VERIFY: `profile` matches `dbt_project.yml` profile name (`local_data_platform`)
-  - [ ] VERIFY: `target` is `postgres` (the Postgres dbt target in `profiles.yml`)
+  - [x] VERIFY: File is at the repo root (same level as `dbt_project.yml`)
+  - [x] VERIFY: `project_dir` and `profiles_dir` match the volume mount path (`/workspace`)
+  - [x] VERIFY: `profile` matches `dbt_project.yml` profile name (`local_data_platform`)
+  - [x] VERIFY: `target` is `postgres` (the Postgres dbt target in `profiles.yml`)
 
 - [ ] Task 3: Add `lightdash-ping` Makefile target (AC: 3)
-  - [ ] Add `lightdash-ping` to the `.PHONY` line at the top of `Makefile`
-  - [ ] Add the target after the `pg-show-pii-log` target (maintain Epic 3 grouping):
+  - [x] Add `lightdash-ping` to the `.PHONY` line at the top of `Makefile`
+  - [x] Add the target after the `pg-show-pii-log` target (maintain Epic 3 grouping):
     ```makefile
     lightdash-ping: ## Check Lightdash is responding (postgres profile required)
     	@curl -sf http://localhost:18000/api/v1/health | python3 -c "import sys,json; d=json.load(sys.stdin); exit(0 if d.get('status')=='ok' else 1)" && echo "✓ Lightdash healthy at http://localhost:18000" || echo "✗ Lightdash not responding — is the postgres profile running?"
     ```
   - [ ] VERIFY: `make lightdash-ping` exits 0 when Lightdash is running
-  - [ ] VERIFY: `make help` shows the `lightdash-ping` target with description
+  - [x] VERIFY: `make help` shows the `lightdash-ping` target with description
 
-- [ ] Task 4: Write tests `tests/test_story_3_4_lightdash.py` (AC: 1, 2, 3)
-  - [ ] Test that `lightdash.config.yaml` exists at the project root
-  - [ ] Test that `lightdash.config.yaml` contains required keys: `version`, `projects`, `type: dbt`, `project_dir: /workspace`, `profiles_dir: /workspace`, `profile: local_data_platform`, `target: postgres`
-  - [ ] Test that `docker-compose.yml` lightdash service has a volume mount for `./:/workspace`
-  - [ ] Test that `docker-compose.yml` lightdash service overrides `POSTGRES_HOST=postgres` for Docker internal networking
-  - [ ] Test that `docker-compose.yml` lightdash service passes through `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` env vars
-  - [ ] Test that `lightdash-ping` is declared in `Makefile` `.PHONY` line
+- [x] Task 4: Write tests `tests/test_story_3_4_lightdash.py` (AC: 1, 2, 3)
+  - [x] Test that `lightdash.config.yaml` exists at the project root
+  - [x] Test that `lightdash.config.yaml` contains required keys: `version`, `projects`, `type: dbt`, `project_dir: /workspace`, `profiles_dir: /workspace`, `profile: local_data_platform`, `target: postgres`
+  - [x] Test that `docker-compose.yml` lightdash service has a volume mount for `./:/workspace`
+  - [x] Test that `docker-compose.yml` lightdash service overrides `POSTGRES_HOST=postgres` for Docker internal networking
+  - [x] Test that `docker-compose.yml` lightdash service passes through `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` env vars
+  - [x] Test that `lightdash-ping` is declared in `Makefile` `.PHONY` line
 
 - [ ] Task 5: Update sprint status
   - [ ] `_bmad-output/implementation-artifacts/sprint-status.yaml`: update `3-4-lightdash-bi-dashboard` → `done` after verification passes
@@ -246,12 +246,43 @@ make open-docs
 
 ### Agent Model Used
 
-_to be filled by dev agent_
+GPT-5 Codex
 
 ### Debug Log References
 
+- `python tests/test_story_3_4_lightdash.py`
+- `python -m unittest discover tests`
+- `make help`
+- `docker compose --profile postgres config`
+- Attempted live verification on a dependency-aware branch based on Story 3.3:
+  - `docker compose up -d postgres lightdash-db lightdash`
+  - `set -a; . ./.env; set +a; make run-pipeline`
+  - `make lightdash-ping`
+  - `curl -i http://localhost:18000/api/v1/health`
+  - `docker logs story-3-4-postgres-base-lightdash-1 --tail 120`
+  - `docker logs story-3-4-postgres-base-postgres-1 --tail 120`
+  - `docker logs story-3-4-postgres-base-lightdash-db-1 --tail 120`
+
 ### Completion Notes List
+
+- Added Lightdash workspace mounting and postgres warehouse environment overrides to the `lightdash` service while preserving the existing `PG*` metadata-database variables.
+- Added `lightdash.config.yaml` so the container can find the dbt project at `/workspace` with the `postgres` target.
+- Added the `lightdash-ping` Makefile target and structural tests covering the new config, Compose wiring, and Makefile target registration.
+- Verified structural and regression coverage passed on the dependency-aware branch: `python tests/test_story_3_4_lightdash.py`, `python -m unittest discover tests`, and `docker compose --profile postgres config`.
+- Live verification remains blocked by the local Docker environment rather than the implementation:
+  - Postgres and Lightdash metadata Postgres containers fail initialization with `No space left on device`
+  - `make run-pipeline` cannot connect to the branch-local postgres service while it is restart-looping
+  - `make lightdash-ping` cannot pass because Lightdash never becomes healthy while its backing services are unavailable
 
 ### File List
 
+- docker-compose.yml
+- Makefile
+- lightdash.config.yaml
+- tests/test_story_3_4_lightdash.py
+- _bmad-output/implementation-artifacts/sprint-status.yaml
+- _bmad-output/implementation-artifacts/3-4-lightdash-bi-dashboard.md
+
 ### Change Log
+
+- 2026-04-15: Added Lightdash postgres wiring, root config, structural tests, and in-progress implementation notes; live verification blocked by Docker disk exhaustion during Postgres initialization.
