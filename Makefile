@@ -1,4 +1,4 @@
-.PHONY: help start stop run-pipeline build-evidence open-docs install profiles init-duckdb
+.PHONY: help start stop run-pipeline pg-show-pii-log build-evidence open-docs install profiles init-duckdb
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -27,6 +27,11 @@ run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → dbt d
 	PYTHONPATH=. python ingest/dlt_api_source.py && \
 	echo "▶  Running dbt run..." && \
 	dbt run && \
+	if [ "$$COMPOSE_PROFILES" = "postgres" ]; then \
+		echo "▶  Applying PII masking views (postgres profile)..."; \
+		docker compose exec -T postgres psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" \
+			-f /scripts/postgres_masking.sql; \
+	fi && \
 	echo "▶  Running dbt test..." && \
 	dbt test && \
 	echo "▶  Generating dbt docs..." && \
@@ -40,6 +45,15 @@ run-pipeline: ## Run full pipeline: ingestion → dbt run → dbt test → dbt d
 		echo "ℹ  Elementary (edr) and Evidence skipped for profile: $$COMPOSE_PROFILES (DuckDB-only components)"; \
 	fi && \
 	echo "✔  Pipeline complete — run make open-docs to view dashboards"
+
+pg-show-pii-log: ## Show recent PII access log entries (postgres profile only)
+	@test -f .env || (echo "❌  .env not found" && exit 1)
+	@set -a; . ./.env; set +a; \
+	if [ "$$COMPOSE_PROFILES" != "postgres" ]; then \
+		echo "⚠  pg-show-pii-log requires COMPOSE_PROFILES=postgres (current: $$COMPOSE_PROFILES)" && exit 1; \
+	fi; \
+	docker compose exec -T postgres psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" \
+	    -c "SELECT logged_at, role_name, schema_name, table_name FROM public.pii_access_log ORDER BY logged_at DESC LIMIT 20;"
 
 build-evidence: ## Build Evidence analytical reports (runs on host — DuckDB WASM build requires macOS)
 	@echo "▶  Building Evidence reports (host build)..."

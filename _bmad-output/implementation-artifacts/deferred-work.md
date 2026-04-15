@@ -1,5 +1,14 @@
 # Deferred Work
 
+## Deferred from: code review of 3-2-three-role-rbac-and-pii-column-masking (2026-04-14)
+
+- `pii_access_log` never auto-populated — no trigger/pgAudit/function inserts rows; `pg-show-pii-log` always returns zero rows; dev notes explicitly defer automatic logging to Story 5.x
+- Masking not applied under `full` profile — Makefile guard is `COMPOSE_PROFILES=postgres` exact match; `full` profile uses Postgres too but skips masking; out of scope until Epic 5
+- No transaction wrapper in `postgres_masking.sql` — partial `dbt run` failure leaves some views created and some not with no rollback; acceptable for local dev usage pattern
+- `ALTER SYSTEM SET log_statement = 'all'` is server-wide — all databases and users on the instance; intentional for this local dev platform per dev notes
+- Column order mismatch in `silver.faker_customers_masked` — view emits `_source, _loaded_at` in swapped order relative to `schema.yml`; cosmetic, no functional impact
+- Tests don't verify per-view PII coverage — `test_masking_sql_redacts_expected_pii_columns` passes if each PII column redaction appears anywhere in the file; weak coverage of per-view correctness
+
 ## Deferred from: code review of 3-1-postgres-profile-docker-compose-and-dbt-adapter (2026-04-14)
 
 - `ALTER DEFAULT PRIVILEGES` scope limited to init-script executor role — correct today (dlt/dbt run as `POSTGRES_USER`/dbt); latent RBAC gap if future roles diverge; revisit in Story 3.2
