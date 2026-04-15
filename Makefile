@@ -1,4 +1,4 @@
-.PHONY: help start stop run-pipeline pg-show-pii-log dbt-verify-contracts build-evidence open-docs install profiles init-duckdb
+.PHONY: help start stop run-pipeline pg-show-pii-log dbt-verify-contracts lightdash-ping build-evidence open-docs install profiles init-duckdb
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -57,6 +57,9 @@ pg-show-pii-log: ## Show recent PII access log entries (postgres profile only)
 
 dbt-verify-contracts: ## Compile Gold models to verify schema contract syntax (no DB required)
 	dbt compile --select tag:gold
+
+lightdash-ping: ## Check Lightdash is responding (postgres profile required)
+	@curl -sf http://localhost:18000/api/v1/health | python3 -c "import sys,json; d=json.load(sys.stdin); exit(0 if d.get('status')=='ok' else 1)" && echo "✓ Lightdash healthy at http://localhost:18000" || echo "✗ Lightdash not responding — is the postgres profile running?"
 
 build-evidence: ## Build Evidence analytical reports (runs on host — DuckDB WASM build requires macOS)
 	@echo "▶  Building Evidence reports (host build)..."

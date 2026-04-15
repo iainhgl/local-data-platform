@@ -12,12 +12,15 @@ services:
 
   # Lightdash — BI dashboard (all profiles)
   # NOTE: lightdash/lightdash:latest has no ARM64 manifest; runs under Rosetta 2 on Apple Silicon (NFR11 known exception)
+  # Warehouse connection requires postgres service; Lightdash is only fully functional on postgres/full profiles.
   lightdash:
     image: lightdash/lightdash:latest
     platform: linux/amd64
     profiles: ["simple", "postgres", "lakehouse", "full"]
     ports:
       - "18000:3000"
+    volumes:
+      - ./:/workspace
     environment:
       - LIGHTDASH_SECRET=${LIGHTDASH_SECRET}
       - PGHOST=lightdash-db
@@ -25,8 +28,14 @@ services:
       - PGUSER=lightdash
       - PGPASSWORD=${LIGHTDASH_DB_PASSWORD:-changeme}
       - PGDATABASE=lightdash_db
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     depends_on:
       - lightdash-db
+      - postgres
     restart: unless-stopped
 
   # Evidence — analytical reporting (all profiles)
