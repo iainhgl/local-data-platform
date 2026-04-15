@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-25
-last_updated: 2026-04-14  # story 3.2 done
+last_updated: 2026-04-15  # story 3.3 review
 project: local-data-platform
 project_key: NOKEY
 tracking_system: file-system
@@ -72,7 +72,7 @@ development_status:
   epic-3: in-progress
   3-1-postgres-profile-docker-compose-and-dbt-adapter: done
   3-2-three-role-rbac-and-pii-column-masking: done
-  3-3-dbt-schema-contracts-on-serving-layer: backlog
+  3-3-dbt-schema-contracts-on-serving-layer: review
   3-4-lightdash-bi-dashboard: backlog  # moved from 2-10; Postgres is a first-class Lightdash target; DuckDB adapter not yet released upstream
   epic-3-retrospective: optional
 
