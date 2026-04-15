@@ -11,6 +11,9 @@ models:
         description: "UUID primary key for the order."
         data_type: varchar
         meta: {pii: false}
+        constraints:
+          - type: not_null
+          - type: primary_key
         tests:
           - unique
           - not_null
@@ -18,18 +21,24 @@ models:
         description: "Customer identifier referenced by the order."
         data_type: varchar
         meta: {pii: false}
+        constraints:
+          - type: not_null
         tests:
           - not_null
       - name: product_id
         description: "Product identifier referenced by the order."
         data_type: varchar
         meta: {pii: false}
+        constraints:
+          - type: not_null
         tests:
           - not_null
       - name: order_date
         description: "Timestamp when the order was placed."
         data_type: timestamp with time zone
         meta: {pii: false}
+        constraints:
+          - type: not_null
         tests:
           - not_null
       - name: quantity

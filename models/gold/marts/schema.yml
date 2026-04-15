@@ -11,6 +11,9 @@ models:
         description: "UUID primary key for the order."
         data_type: varchar
         meta: {pii: false}
+        constraints:
+          - type: not_null
+          - type: primary_key
         tests:
           - unique
           - not_null

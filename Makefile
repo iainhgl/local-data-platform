@@ -1,4 +1,4 @@
-.PHONY: help start stop run-pipeline pg-show-pii-log build-evidence open-docs install profiles init-duckdb
+.PHONY: help start stop run-pipeline pg-show-pii-log dbt-verify-contracts build-evidence open-docs install profiles init-duckdb
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -54,6 +54,9 @@ pg-show-pii-log: ## Show recent PII access log entries (postgres profile only)
 	fi; \
 	docker compose exec -T postgres psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" \
 	    -c "SELECT logged_at, role_name, schema_name, table_name FROM public.pii_access_log ORDER BY logged_at DESC LIMIT 20;"
+
+dbt-verify-contracts: ## Compile Gold models to verify schema contract syntax (no DB required)
+	dbt compile --select tag:gold
 
 build-evidence: ## Build Evidence analytical reports (runs on host — DuckDB WASM build requires macOS)
 	@echo "▶  Building Evidence reports (host build)..."
