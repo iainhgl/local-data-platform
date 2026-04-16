@@ -1,4 +1,4 @@
-.PHONY: help start stop run-pipeline pg-show-pii-log dbt-verify-contracts build-evidence open-docs install profiles init-duckdb
+.PHONY: help start stop run-pipeline pg-show-pii-log dbt-verify-contracts build-evidence open-docs install profiles init-duckdb lightdash-ping
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -62,6 +62,9 @@ build-evidence: ## Build Evidence analytical reports (runs on host — DuckDB WA
 	@echo "▶  Building Evidence reports (host build)..."
 	@cd evidence && npm install && npm run sources && npm run build
 	@echo "✔  Evidence reports built — run 'docker compose up' to serve at http://localhost:18010"
+
+lightdash-ping: ## Check Lightdash is responding (postgres profile required)
+	@curl -sf http://localhost:18000/api/v1/health | python3 -c "import sys,json; d=json.load(sys.stdin); exit(0 if d.get('status')=='ok' else 1)" && echo "✓ Lightdash healthy at http://localhost:18000" || echo "✗ Lightdash not responding — is the postgres profile running?"
 
 open-docs: ## Open dashboards: Lightdash (18000) Evidence (18010) dbt docs (18020) Elementary (18030)
 	@echo "▶  Opening dashboards..."

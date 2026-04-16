@@ -1,0 +1,10 @@
+version: '1.0'
+projects:
+  - name: local_data_platform
+    type: dbt
+    dbt:
+      type: local
+      project_dir: /workspace
+      profiles_dir: /workspace
+      profile: local_data_platform
+      target: postgres
