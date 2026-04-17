@@ -73,11 +73,11 @@ The platform runs on WSL2 (Ubuntu 22.04+). Set Docker Desktop -> Settings -> Res
 
 | Story | Title | Status |
 |---|---|---|
-| **Epic 1** | **Project Foundation** | **in-progress** |
+| **Epic 1** | **Project Foundation** | **done** |
 | 1.1 | Repository scaffold and dbt project initialisation | ✅ done |
 | 1.2 | Makefile profile switching and service lifecycle | ✅ done |
 | 1.3 | Port allocation and Docker Compose structure | ✅ done |
-| **Epic 2** | **Simple Profile — First Working Pipeline (MVP)** | **in-progress** |
+| **Epic 2** | **Simple Profile — First Working Pipeline (MVP)** | **done** |
 | 2.1 | Faker synthetic data generator | ✅ done |
 | 2.2 | dlt file source ingestion to bronze | ✅ done |
 | 2.3 | dlt API source ingestion to bronze | ✅ done |
@@ -93,11 +93,11 @@ The platform runs on WSL2 (Ubuntu 22.04+). Set Docker Desktop -> Settings -> Res
 | 2.12b | Silver incremental idempotency fix | ✅ done |
 | 2.13 | dbt documentation and column lineage | done |
 | 2.14 | Cron schedule and README | done |
-| **Epic 3** | **Postgres Profile — Server Warehouse & Governance** | **backlog** |
-| 3.1 | Postgres profile Docker Compose and dbt adapter | backlog |
-| 3.2 | Three-role RBAC and PII column masking | backlog |
-| 3.3 | dbt schema contracts on serving layer | backlog |
-| 3.4 | Lightdash BI dashboard | backlog |
+| **Epic 3** | **Postgres Profile — Server Warehouse & Governance** | **done** |
+| 3.1 | Postgres profile Docker Compose and dbt adapter | ✅ done |
+| 3.2 | Three-role RBAC and PII column masking | ✅ done |
+| 3.3 | dbt schema contracts on serving layer | ✅ done |
+| 3.4 | Lightdash BI dashboard | ✅ done |
 | **Epic 4** | **Lakehouse Profile — Open Table Format & Distributed Query** | **backlog** |
 | 4.1 | Lakehouse profile — MinIO, Iceberg and Trino | backlog |
 | 4.2 | NYC Taxi dataset and schema evolution | backlog |

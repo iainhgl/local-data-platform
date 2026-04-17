@@ -1,5 +1,17 @@
 # Deferred Work
 
+## Deferred from: code review of 3-4-lightdash-bi-dashboard (2026-04-15)
+
+- Full-repo mount `./:/workspace` exposes secrets to Lightdash container — pre-existing pattern shared by cron-scheduler and evidence; acceptable for local dev tool; revisit if multi-user or production deployment is considered
+- `lightdash.config.yaml` hardcodes `/workspace` paths not valid on host machine — intentional container-only config; host-side Lightdash CLI would need different config; acceptable for this deployment model
+- `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` injected without fallback defaults — expands to empty string on simple/lakehouse profiles where these vars are not defined; pre-existing pattern for these vars throughout docker-compose.yml; acceptable for local dev tool
+- `lightdash-ping` curl failure produces noisy Python traceback when Lightdash is down — curl exits non-zero producing no body, Python raises `json.decoder.JSONDecodeError` before shell `||` branch runs; minor UX nit; acceptable for a dev convenience target
+
+## Deferred from: code review of 3-3-dbt-schema-contracts-on-serving-layer (2026-04-15)
+
+- YAML re-parsed on each iteration in `test_primary_key_columns_declare_not_null_and_primary_key_constraints` — same file read and parsed once per key that shares a schema path; no correctness bug, pure perf nit
+- Task 4 fail-fast demo has no persistent artifact in the diff — execution recorded in dev agent completion notes; no artifact required by spec
+
 ## Deferred from: code review of 3-2-three-role-rbac-and-pii-column-masking (2026-04-14)
 
 - `pii_access_log` never auto-populated — no trigger/pgAudit/function inserts rows; `pg-show-pii-log` always returns zero rows; dev notes explicitly defer automatic logging to Story 5.x
